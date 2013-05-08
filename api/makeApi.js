@@ -9,9 +9,19 @@ var schedule = require('node-schedule');
 var _data = {};
 var _cnt = 0;
 
+// 작업 한번 실행
+action();
+// 스케쥴 등록.
 var j = schedule.scheduleJob('*/30 * * * *', function() {
 	console.log('schedule');
-	
+
+	action();
+
+});
+/**
+ * 메인 작업.
+ */
+function action() {
 	// 주요기사, 댓글 많은 뉴스, 
 	jsdom.env(
 		'<html><body></body></html>'
@@ -19,10 +29,9 @@ var j = schedule.scheduleJob('*/30 * * * *', function() {
 		, function(err, window) {
 
 			var data = {
-				manyCommentsEntertain : window.manyCommentsEntertain.news
-				, manyCommentsSports : window.manyCommentsSports.news
-				, manyCommentsTotal : window.manyCommentsTotal.news
-				, primaryEntertain : window.primaryEntertain.component.data
+				manyCommentsEntertain : getUrlAddedData(window.manyCommentsEntertain.news)
+				, manyCommentsSports : getUrlAddedData(window.manyCommentsSports.news)
+				, manyCommentsTotal : getUrlAddedData(window.manyCommentsTotal.news)
 				, primaryEntertain : getCleanData(window.primaryEntertain)
 				, primarySisa : getCleanData(window.primarySisa)
 				, primaryLife : getCleanData(window.primaryLife)
@@ -48,6 +57,8 @@ var j = schedule.scheduleJob('*/30 * * * *', function() {
 				data.popularTotal.push({
 					title : window.jQuery(this).find('a').attr('title')
 					, newsId : window.jQuery(this).find('a').attr('href').replace('/v/','')
+					, url : 'http://media.daum.net' + window.jQuery(this).find('a').attr('href')
+					, cpKorName : window.jQuery(this).find('span.source').html()
 				});
 			});
 
@@ -56,10 +67,16 @@ var j = schedule.scheduleJob('*/30 * * * *', function() {
 			writeFile(data);
 		}
 	);
+}
+function getUrlAddedData(service) {
 
+	$.each(service, function (i, item) {
+		service[i].url = 'http://media.daum.net/v/' + item.newsId
+	});
 
-});
+	return service;
 
+}
 /**
  * 레고에서 만들어진 지저분한 데이터 깔끔하게 만들기.
  * @param  {Object} service 원시데이터.
