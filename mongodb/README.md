@@ -1,3 +1,3 @@
-```
+```shell
 yum install mongodb
 ```
