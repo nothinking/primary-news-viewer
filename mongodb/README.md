@@ -16,7 +16,7 @@ port=27017
 fork=true
 
 rest=true
-auth=true
+#auth=true
 #noauth=true
 ```
 
