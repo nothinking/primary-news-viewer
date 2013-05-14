@@ -36,7 +36,7 @@ tail -f /data/logs/mongodb.log
 
 nodejs 설치
 ```shell
-su - hanadmin
+su - han*****
 wget http://nodejs.org/dist/v0.10.5/node-v0.10.5.tar.gz
 tar xzvf node-v0.10.5.tar.gz
 cd node-v0.10.5
