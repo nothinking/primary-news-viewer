@@ -1,4 +1,3 @@
-
 mongodb 설치
 ```shell
 yum install mongodb
@@ -66,3 +65,20 @@ mongodb rest 실행
 forever start /usr/local/bin/mongodb-rest
 curl localhost:3000/test/example1
 ```
+
+-----
+
+mongojs
+https://github.com/gett/mongojs
+
+
+mongodb rest api
+Supported REST requests:
+
+* `GET /db/collection` - Returns all documents
+* `GET /db/collection?query=%7B%22isDone%22%3A%20false%7D` - Returns all documents satisfying query
+* `GET /db/collection?query=%7B%22isDone%22%3A%20false%7D&limit=2&skip=2` - Ability to add options to query (limit, skip, etc)
+* `GET /db/collection/id` - Returns document with _id_
+* `POST /db/collection` - Insert new document in collection (document in POST body)
+* `PUT /db/collection/id` - Update document with _id_ (updated document in PUT body)
+* `DELETE /db/collection/id` - Delete document with _id_
