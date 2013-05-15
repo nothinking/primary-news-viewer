@@ -1,4 +1,7 @@
-# 다음 주요 뉴스를 뷰페이저 형태로 보여줍니다.
+```node
+forever start -l .../privary-news-viewer.log make-top-api.js
+```
+
 
 ## 데이터를 뽑아올 것들.
 - 주요뉴스 api
