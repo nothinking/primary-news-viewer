@@ -14,7 +14,7 @@ var db = mongojs('uidev.media.daum.net:27017/primarynews', ['top']);
 // 작업 한번 실행
 action();
 // 스케쥴 등록.
-var j = schedule.scheduleJob('*/30 * * * *', function() {
+var j = schedule.scheduleJob('*/10 * * * *', function() {
 	console.log('schedule');
 
 	action();
@@ -33,7 +33,6 @@ function action() {
 			var data = []
 				, splitWords = $([/newsid=/ig, '/v/', '#']);
 
-			db.top.drop();
 			window.jQuery('.wrap_history a').each(function(i, item) {
 				var url = window.jQuery(item).attr('href');
 				var title = window.jQuery(item).text();
@@ -54,9 +53,7 @@ function action() {
 
 			});
 			
-			console.log(db.top.find({}, function(err, docs){
-				console.log(err, docs)
-			}));
+
 		}
 	);
 }
