@@ -17,6 +17,9 @@
     "jsdom": "~0.6.2",
     "jquery": "~1.8.3",
     "node-schedule": "~0.1.8",
-    "mongojs": "~0.7.5"
+    "mongojs": "~0.7.5",
+    "express": "~3.2.4",
+    "path": "~0.4.9",
+    "ejs": "~0.8.4"
   }
 }
