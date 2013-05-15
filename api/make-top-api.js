@@ -1,13 +1,15 @@
 var jsdom = require('jsdom');
 var $ = require('jquery');
-var fs = require('fs');
 var schedule = require('node-schedule');
+var mongojs = require('mongojs');
 
 /**
  * 전역변수 선언.
  */
 var _data = {};
 var _cnt = 0;
+var db = mongojs('uidev.media.daum.net:27017/primarynews', ['top']);
+
 
 // 작업 한번 실행
 action();
@@ -25,67 +27,38 @@ function action() {
 
 	// 인기기사
 	jsdom.env(
-		'http://www.daum.net/'
+		'http://media.daum.net/netizen/newsbox/'
 		, ['http://s1.daumcdn.net/svc/original/U03/cssjs/jquery/jquery-2.0.0.min.js']
 		, function(err, window) {
-			var data = [];
-			window.jQuery('ol.list_best li').each(function(i, item) {
-				data.popularTotal.push({
-					title : window.jQuery(this).find('a').attr('title')
-					, newsId : window.jQuery(this).find('a').attr('href').replace('/v/','')
-					, url : 'http://media.daum.net' + window.jQuery(this).find('a').attr('href')
-					, cpKorName : window.jQuery(this).find('span.source').html()
+			var data = []
+				, splitWords = $([/newsid=/ig, '/v/', '#']);
+
+			db.top.drop();
+			window.jQuery('.wrap_history a').each(function(i, item) {
+				var url = window.jQuery(item).attr('href');
+				var title = window.jQuery(item).text();
+				var id;
+
+
+				splitWords.each(function(i, item) {
+					id = url.split(item)[1];
+					return id === undefined;
 				});
+
+				if(id === undefined){
+					console.log(url)
+					return;
+				} else {
+					db.top.save({title : title, _id : id});	
+				}
+
 			});
-
-
-			// console.log(data)
-			writeFile(data);
+			
+			console.log(db.top.find({}, function(err, docs){
+				console.log(err, docs)
+			}));
 		}
 	);
 }
-function getUrlAddedData(service) {
 
-	$.each(service, function (i, item) {
-		service[i].url = 'http://media.daum.net/v/' + item.newsId
-	});
-
-	return service;
-
-}
-/**
- * 레고에서 만들어진 지저분한 데이터 깔끔하게 만들기.
- * @param  {Object} service 원시데이터.
- */
-function getCleanData(service) {
-	var data = [];
-
-	$.each(service.component.data, function (i, item) {
-		data.push({
-			title : item.component.data[0].title
-			, url : item.component.data[0].url
-		});
-	});
-
-	return data;
-}
-/**
- * api.js파일 만들기.
- * @param  {Object} data json data
- */
-function writeFile(data) {
-	$.extend(_data, data);
-
-	if (++_cnt < 2){
-		return false;
-	}
-
-	fs.writeFile("api.js", JSON.stringify(_data, null, 4), function(err) {
-	      if(err) {
-	      	console.log('error : make file')
-	      } else {
-	        console.log("The file was saved!");
-	      }
-	}); 
-}
 
