@@ -49,8 +49,8 @@ npm proxy setting
 npm config set proxy http://proxy.cloud.daumcorp.com:3128 
 npm config set https-proxy http://proxy.cloud.daumcorp.com:3128 
 
-export http_proxy=http://10.10.159.45:13128
-export https_proxy=http://10.10.159.45:13128
+export http_proxy=http://proxy.cloud.daumcorp.com:3128
+export https_proxy=http://proxy.cloud.daumcorp.com:3128
 ```
 
 node mongorestful 설치
