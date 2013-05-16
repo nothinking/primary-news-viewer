@@ -39,23 +39,36 @@ function action() {
 			window.jQuery('.wrap_history a').each(function(i, item) {
 				var url = window.jQuery(item).attr('href');
 				var title = window.jQuery(item).text();
-				var id;
+				var newsId, _id;
 
 
 				splitWords.each(function(i, item) {
-					id = url.split(item)[1];
-					return id === undefined;
+					newsId = url.split(item)[1];
+					return newsId === undefined;
 				});
 
-				if(id === undefined){
-					console.log("id is not found", url)
+				// 뉴스 기사가 아니면 패스
+				if(newsId === undefined){
+					console.log(url)
 					return;
-				} else {
-					db.top.save({
-						title : title, 
-						newsId : id.substring(0,17), 
-						_id : mongojs.ObjectId(id.substring(0,17) + "0000000")
-					});	
+				} 
+				else {
+					
+					newsId = newsId.substring(0,17);
+					_id = newsId + '0000000';
+
+					db.top.findOne({_id : _id}, function(err, result) {
+						if (err) return false;
+
+						if (!result) {
+							console.log('save - ' + newsId);
+							db.top.save({
+								title : title
+								, newsId : newsId
+								, _id : mongojs.ObjectId(_id)
+							});	
+						}
+					});
 				}
 			});
 			
