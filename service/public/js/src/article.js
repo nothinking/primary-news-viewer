@@ -14,24 +14,27 @@ define(["backbone"], function(Backbone){
 		"load": function(newsId, options){
 			var that = this,
 				options = _.extend({
-					"success": function(data, textStatus, jqXHR){
-						console.log("success");
+					"url": "http://media.daum.net/api/service/news/view.jsonp?callback=?&newsId=" + newsId,
+					"async": false,
+					"dataType": "jsonp",
+					"contentType": "application/json",
+					"success": function(data){
 						console.log(data);
-						console.log(that);
-						//that.save(data);
+						that.save(data);
 					},
 					"fail": function(data, textStatus, jqXHR){
 						that.trigger("error", this, jqXHR, options);
 					}
 				});
-			$.getJSON("http://media.daum.net/api/service/news/view.jsonp?callback=?&newsId=" + this.get("newsId"), options);
+
+			$.ajax(options);
 		}
 	});
 
 	var Collection = Backbone.Collection.extend({
 		"model": Model,
 		"url": function(){
-			return "/api/" + this.categoryKey + "?" + $.param(this.params);
+			return "/api/" + this.categoryKey;
 		},
 		"initialize": function(models, options){
 			_.extend(this, {

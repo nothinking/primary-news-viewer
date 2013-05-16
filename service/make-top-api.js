@@ -33,6 +33,9 @@ function action() {
 			var data = []
 				, splitWords = $([/newsid=/ig, '/v/', '#']);
 
+				db.top.drop();
+				
+
 			window.jQuery('.wrap_history a').each(function(i, item) {
 				var url = window.jQuery(item).attr('href');
 				var title = window.jQuery(item).text();
@@ -45,12 +48,15 @@ function action() {
 				});
 
 				if(id === undefined){
-					console.log(url)
+					console.log("id is not found", url)
 					return;
 				} else {
-					db.top.save({title : title, newsId : id.substring(0,17)});	
+					db.top.save({
+						title : title, 
+						newsId : id.substring(0,17), 
+						_id : mongojs.ObjectId(id.substring(0,17) + "0000000")
+					});	
 				}
-
 			});
 			
 
