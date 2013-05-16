@@ -34,7 +34,6 @@ function action() {
 				, splitWords = $([/newsid=/ig, '/v/', '#']);
 
 				db.top.drop();
-				
 
 			window.jQuery('.wrap_history a').each(function(i, item) {
 				var url = window.jQuery(item).attr('href');
@@ -61,7 +60,7 @@ function action() {
 						if (err) return false;
 
 						if (!result) {
-							console.log('save - ' + newsId);
+							// console.log('save - ' + newsId);
 							db.top.save({
 								title : title
 								, newsId : newsId

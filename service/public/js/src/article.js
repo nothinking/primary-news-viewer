@@ -6,6 +6,7 @@ define(["backbone"], function(Backbone){
 			"title": ""
 		},
 		"parse": function(response){
+			console.log(response.content);
 			if(response.content === undefined){
 				this.load(response.newsId);
 			} 
@@ -19,14 +20,16 @@ define(["backbone"], function(Backbone){
 					"dataType": "jsonp",
 					"contentType": "application/json",
 					"success": function(data){
-						console.log(data);
-						that.save(data);
+						console.log("success")
+						that.set(data);
+						console.log(that.toJSON())
+						// that.set(data).save();
 					},
 					"fail": function(data, textStatus, jqXHR){
 						that.trigger("error", this, jqXHR, options);
 					}
-				});
-
+				}, options);
+			console.log("load");
 			$.ajax(options);
 		}
 	});
