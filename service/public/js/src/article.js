@@ -31,7 +31,7 @@ define(["backbone"], function(Backbone){
 	var Collection = Backbone.Collection.extend({
 		"model": Model,
 		"url": function(){
-			return "/api/primarynews/" + this.categoryKey + "?" + $.param(this.params);
+			return "/api/" + this.categoryKey + "?" + $.param(this.params);
 		},
 		"initialize": function(models, options){
 			_.extend(this, {
