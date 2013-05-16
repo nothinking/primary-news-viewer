@@ -48,7 +48,7 @@ function action() {
 					console.log(url)
 					return;
 				} else {
-					db.top.save({title : title, _id : id});	
+					db.top.save({title : title, newsId : id.substring(0,17)});	
 				}
 
 			});
