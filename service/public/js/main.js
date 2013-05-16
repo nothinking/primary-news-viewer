@@ -31,6 +31,7 @@ require(["backbone", "router"], function(Backbone, router) {
         require(["article"], function(Article){
             var collection = new Article.Collection();
             collection.fetch({"reset": true});
+            window.c = collection;
         });
         console.log("index");
     });

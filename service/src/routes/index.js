@@ -17,19 +17,24 @@ var index = function(req, res){
 
 
 var api = function(req, res){
-	var path = [ req.params.collection, req.params.id ].join("/");
-	console.log(BACKBONE_API_URL + "/" + DB_NAME + "/" + path);
-
-	request(
-		{
+	var path = [ req.params.collection, req.params.id ].join("/"),
+		options = {
 			"method": req.method,
-			"content-type": "application/json",
-			"uri": BACKBONE_API_URL + "/" + DB_NAME + "/" + path + "?" + $.param(req.query)
-		}, 
-		function(err, response, body){
-			res.json(response.statusCode, JSON.parse(body));
+			"headers": {
+				"Content-type": "application/json"
+			},
+			"url": BACKBONE_API_URL + "/" + DB_NAME + "/" + path + "?" + $.param(req.query),
+			"body": JSON.stringify(req.body)
+		};
+
+	request(options, function(err, response, body){
+		console.log(err, response)
+		if(err){
+			res.json(500, err);
+		} else {
+			res.json(response.statusCode || 500, JSON.parse(body));
 		}
-	);
+	});
 };
 
 
