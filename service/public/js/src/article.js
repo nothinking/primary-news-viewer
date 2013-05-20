@@ -1,6 +1,4 @@
 define(["backbone"], function(Backbone){
-	var queue = [];
-
 	var Model = Backbone.Model.extend({
 		"idAttribute": "_id",
 		"defaults": {
@@ -17,25 +15,11 @@ define(["backbone"], function(Backbone){
 			var that = this,
 				options = {
 					"url": "http://media.daum.net/api/service/news/view.jsonp?callback=?&newsId=" + newsId,
-					"async": false,
 					"dataType": "jsonp",
 					"contentType": "application/json",
 					"wait": true,
 					"success": function(data){
-						var func = function(){
-							that.save(data, {
-								"success": function(){
-									var func = queue.shift();
-									func && func();
-								}
-							});
-						}
-
-						if(queue.length === 0){
-							func();
-						}
-						queue.push(func);
-
+						that.save(data, {});
 					},
 					"fail": function(data, textStatus, jqXHR){
 						that.trigger("error", this, jqXHR, options);
