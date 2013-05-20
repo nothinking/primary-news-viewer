@@ -1,40 +1,53 @@
 var request = require("request");
 var $ = require("jquery");
-
-
-
-// TODO move to config
-var BACKBONE_API_URL = "http://uidev.media.daum.net:3000";
-var DB_REMOTE_SERVER = "uidev.media.daum.net";
-var DB_NAME = "primarynews";
-
-// var r = request.defaults({"proxy": "http://10.10.159.45:13128"});
+var mongojs = require("mongojs");
+var mongoapi = require("../mongoapi");
 
 
 var index = function(req, res){
 	res.render("index", {})
 };
 
-
 var api = function(req, res){
-	var path = [ req.params.collection, req.params.id ].join("/"),
-		options = {
-			"method": req.method,
-			"headers": {
-				"Content-type": "application/json"
-			},
-			"url": BACKBONE_API_URL + "/" + DB_NAME + "/" + path + "?" + $.param(req.query),
-			"body": JSON.stringify(req.body)
+
+	var db = mongojs('uidev.media.daum.net:27017/primarynews'),
+		collection = db.collection(req.params.collection),
+		id = req.params.id,
+		query = req.query.body ? JSON.parse(req.query.body) : req.body,
+		method = req.method,
+		callback = function(err, doc){
+			console.log("callback:", err, doc)
+			if(err !== null){
+				res.json(500, err);	
+			} else {
+				res.json(doc);
+			}
 		};
 
-	request(options, function(err, response, body){
-		console.log(err, response)
-		if(err){
-			res.json(500, err);
-		} else {
-			res.json(response.statusCode || 500, JSON.parse(body));
-		}
-	});
+
+	switch(method){
+		case "POST":
+			mongoapi.create(collection, query, callback);
+		break;
+		
+		case "GET":
+			if(id){
+				query._id = new mongojs.ObjectId(id);
+				mongoapi.readOne(collection, query, callback);
+			} else {
+				mongoapi.read(collection, query, callback);
+			}
+		break;
+
+		case "PUT":
+			mongoapi.update(collection, query, callback);
+		break;
+
+		case "DELETE":
+			query._id = new mongojs.ObjectId(id);
+			mongoapi.del(collection, query, callback);
+		break;
+	}
 };
 
 

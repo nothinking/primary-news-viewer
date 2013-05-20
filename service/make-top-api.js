@@ -2,6 +2,8 @@ var jsdom = require('jsdom');
 var $ = require('jquery');
 var schedule = require('node-schedule');
 var mongojs = require('mongojs');
+var BSON = require("mongodb").BSONPure;
+
 
 /**
  * 전역변수 선언.
@@ -52,11 +54,9 @@ function action() {
 					return;
 				} 
 				else {
-					
 					newsId = newsId.substring(0,17);
-					_id = newsId + '0000000';
 
-					db.top.findOne({_id : _id}, function(err, result) {
+					db.top.findOne({newsId : newsId}, function(err, result) {
 						if (err) return false;
 
 						if (!result) {
@@ -64,14 +64,11 @@ function action() {
 							db.top.save({
 								title : title
 								, newsId : newsId
-								, _id : mongojs.ObjectId(_id)
 							});	
 						}
 					});
 				}
 			});
-			
-
 		}
 	);
 }

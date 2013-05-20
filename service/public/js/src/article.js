@@ -5,32 +5,28 @@ define(["backbone"], function(Backbone){
 			"newsId": "",
 			"title": ""
 		},
-		"parse": function(response){
-			console.log(response.content);
-			if(response.content === undefined){
+		"parse": function(response, jqXHR, options){
+			if(response.content === undefined && response.newsId !== undefined){
 				this.load(response.newsId);
 			} 
 			return response;
 		},
-		"load": function(newsId, options){
+		"load": function(newsId){
 			var that = this,
-				options = _.extend({
+				options = {
 					"url": "http://media.daum.net/api/service/news/view.jsonp?callback=?&newsId=" + newsId,
 					"async": false,
 					"dataType": "jsonp",
 					"contentType": "application/json",
+					"wait": true,
 					"success": function(data){
-						console.log("success")
-						that.set(data);
-						console.log(that.toJSON())
-						// that.set(data).save();
+						that.save(data, { "wait": true});
 					},
 					"fail": function(data, textStatus, jqXHR){
 						that.trigger("error", this, jqXHR, options);
 					}
-				}, options);
-			console.log("load");
-			$.ajax(options);
+				};
+			this.sync("read", this, options);
 		}
 	});
 
