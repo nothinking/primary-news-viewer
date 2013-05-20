@@ -11,9 +11,6 @@ define(["backbone", "text!/template/articleItem.html"], function(Backbone, html)
 			};
 			return response;
 		},
-		"initialize": function(json, options){
-			_.extend(this, {}, options);
-		},
 		"load": function(newsId){
 			var that = this,
 				options = {
@@ -22,14 +19,13 @@ define(["backbone", "text!/template/articleItem.html"], function(Backbone, html)
 					"contentType": "application/json",
 					"wait": true,
 					"success": function(data){
-						that.set(data, { "silent":true }).save();
+						that.save(data);
 					},
 					"fail": function(data, textStatus, jqXHR){
-						that.trigger("error", this, jqXHR, options);
+						that.trigger("error", that, jqXHR, options);
 					}
 				};
-			$.ajax(options);
-			// that.sync("read", that, options);
+			this.sync("read", this, options);
 		},
 		"url": function(){
 			return "/api/" + this.attributes.categoryKey + "/" + this.id;
@@ -47,7 +43,6 @@ define(["backbone", "text!/template/articleItem.html"], function(Backbone, html)
 			}, options);
 			
 			this.params = {
-				
 			};
 		}
 	});
