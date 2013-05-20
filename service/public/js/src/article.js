@@ -1,4 +1,6 @@
 define(["backbone"], function(Backbone){
+	var queue = [];
+
 	var Model = Backbone.Model.extend({
 		"idAttribute": "_id",
 		"defaults": {
@@ -20,13 +22,26 @@ define(["backbone"], function(Backbone){
 					"contentType": "application/json",
 					"wait": true,
 					"success": function(data){
-						that.save(data, { "wait": true});
+						var func = function(){
+							that.save(data, {
+								"success": function(){
+									var func = queue.shift();
+									func && func();
+								}
+							});
+						}
+
+						if(queue.length === 0){
+							func();
+						}
+						queue.push(func);
+
 					},
 					"fail": function(data, textStatus, jqXHR){
 						that.trigger("error", this, jqXHR, options);
 					}
 				};
-			this.sync("read", this, options);
+			that.sync("read", that, options);
 		}
 	});
 
