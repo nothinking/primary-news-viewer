@@ -1,4 +1,4 @@
-/* ===================================================
+ /* ===================================================
  * bootstrap-transition.js v2.3.1
  * http://twitter.github.com/bootstrap/javascript.html#transitions
  * ===================================================
@@ -2279,8 +2279,12 @@
 /* BACKBONE NAVIGATE */
 !function($){
   $(document.body).on("click.navigate.data-api", "[data-navigate]", function(e){
-    var $target = $(e.currentTarget);
+    var $target = $(e.currentTarget),
+      url = typeof $target.data("navigate") === "string" ? $target.data("navigate") : $target.attr("href");
+
     e.preventDefault();
-    Backbone.History.started && Backbone.history.navigate($target.data("navigate"), { "trigger": true });
+    Backbone.History.started && Backbone.history.navigate(url, { "trigger": true });
   })
 }(window.jQuery);
+
+

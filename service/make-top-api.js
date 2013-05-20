@@ -10,7 +10,7 @@ var BSON = require("mongodb").BSONPure;
  */
 var _data = {};
 var _cnt = 0;
-var db = mongojs('uidev.media.daum.net:27017/primarynews', ['top']);
+var db = mongojs('uidev.media.daum.net:27017/primarynews', ['articles']);
 
 
 // 작업 한번 실행
@@ -27,7 +27,7 @@ var j = schedule.scheduleJob('*/10 * * * *', function() {
  */
 function action() {
 
-	// 인기기사
+	// 탑기사
 	jsdom.env(
 		'http://media.daum.net/netizen/newsbox/'
 		, ['http://s1.daumcdn.net/svc/original/U03/cssjs/jquery/jquery-2.0.0.min.js']
@@ -35,7 +35,7 @@ function action() {
 			var data = []
 				, splitWords = $([/newsid=/ig, '/v/', '#']);
 
-				db.top.drop();
+				db.articles.drop();
 
 			window.jQuery('.wrap_history a').each(function(i, item) {
 				var url = window.jQuery(item).attr('href');
@@ -49,23 +49,15 @@ function action() {
 				});
 
 				// 뉴스 기사가 아니면 패스
-				if(newsId === undefined){
+				if(newsId === undefined || !title){
 					console.log(url)
 					return;
 				} 
 				else {
 					newsId = newsId.substring(0,17);
 
-					db.top.findOne({newsId : newsId}, function(err, result) {
-						if (err) return false;
-
-						if (!result) {
-							// console.log('save - ' + newsId);
-							db.top.save({
-								title : title
-								, newsId : newsId
-							});	
-						}
+					db.articles.findAndModify({query: { newsId : newsId }, update: {newsId : newsId, title: title, categoryKey: "top"}, upsert: true},  function(err, result) {
+						console.log(err, result)
 					});
 				}
 			});

@@ -17,6 +17,7 @@ app.use(app.router);
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", routes.index);
+app.get("/view/:id", routes.index);
 app.all("/api/:collection", routes.api);
 app.all("/api/:collection/:id", routes.api);
 

@@ -2,7 +2,7 @@ var request = require("request");
 var $ = require("jquery");
 var mongojs = require("mongojs");
 var mongoapi = require("../mongoapi");
-var db = mongojs('uidev.media.daum.net:27017/primarynews')
+var db = mongojs('uidev.media.daum.net:27017/primarynews', [ "articles" ]);
 
 
 var index = function(req, res){
@@ -11,7 +11,8 @@ var index = function(req, res){
 
 var api = function(req, res){
 
-	var collection = db.collection(req.params.collection),
+	var collection = db.articles,
+		categoryKey = req.params.collection,
 		id = req.params.id,
 		query = req.query.body ? JSON.parse(req.query.body) : req.body,
 		method = req.method,
@@ -33,8 +34,11 @@ var api = function(req, res){
 		case "GET":
 			if(id){
 				query._id = new mongojs.ObjectId(id);
+
 				mongoapi.readOne(collection, query, callback);
 			} else {
+			
+				query.categoryKey = categoryKey;
 				mongoapi.read(collection, query, callback);
 			}
 		break;
