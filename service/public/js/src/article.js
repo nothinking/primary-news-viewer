@@ -1,4 +1,4 @@
-define(["backbone", "text!/template/articleItem.html"], function(Backbone, html){
+define(["backbone", "text!/template/articleItem.html", "text!/template/articleView.html"], function(Backbone, itemHTML, viewHTML){
 	var Model = Backbone.Model.extend({
 		"idAttribute": "_id",
 		"defaults": {
@@ -47,9 +47,9 @@ define(["backbone", "text!/template/articleItem.html"], function(Backbone, html)
 		}
 	});
 
-	var View = Backbone.View.extend({
+	var Item = Backbone.View.extend({
 		"tagName": "li",
-		"template": _.template(html),
+		"template": _.template(itemHTML),
 		"events": {
 			"click a" : "view"
 		},
@@ -65,7 +65,8 @@ define(["backbone", "text!/template/articleItem.html"], function(Backbone, html)
 	});
 
 	var List = Backbone.View.extend({
-		"view": View,
+		"tagName": "ul",
+		"view": Item,
 		"initialize": function(options){
 			_.extend(this, {}, options);
 			this.listenTo(this.collection, "sync", this.render);
@@ -79,10 +80,20 @@ define(["backbone", "text!/template/articleItem.html"], function(Backbone, html)
 		}
 	});
 
+	var View = Item.extend({
+		"tagName": "div",
+		"className": "viewWrap",
+		"template": _.template(viewHTML),
+		"events": {
+
+		}
+	});
+
 	return {
 		"Model": Model,
 		"Collection": Collection,
-		"View": View,
-		"List": List
+		"Item": Item,
+		"List": List,
+		"View": View
 	}
 });
