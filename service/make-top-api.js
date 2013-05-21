@@ -33,7 +33,7 @@ function action() {
 		, ['http://s1.daumcdn.net/svc/original/U03/cssjs/jquery/jquery-2.0.0.min.js']
 		, function(err, window) {
 			var data = []
-				, splitWords = $([/newsid=/ig, '/v/', '#']);
+				, splitWords = $([new RegExp(/newsid=/ig), '/v/', '#']);
 
 				db.articles.drop();
 
