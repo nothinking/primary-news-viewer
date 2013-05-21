@@ -15,6 +15,7 @@ forever start -l .../privary-news-viewer.log make-top-api.js
 - http://media.daum.net/netizen/newsbox/
 - 인기기사
 - http://media.daum.net/netizen/popular/
+- 뉴스 데이터 http://media.daum.net/api/service/news/view.jsonp?callback=?&newsId=
 
 
 ## node로 데이터 만들기 
