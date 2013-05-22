@@ -29,36 +29,54 @@ function action() {
 
 	// 탑기사
 	jsdom.env(
-		'http://media.daum.net/netizen/newsbox/'
+		'http://www.daum.net/pub/json_newsgrp.daum'
 		, ['http://s1.daumcdn.net/svc/original/U03/cssjs/jquery/jquery-2.0.0.min.js']
 		, function(err, window) {
 			var data = []
-				, splitWords = $([new RegExp(/newsid=/ig), '/v/', '#']);
+				, splitWords = $([new RegExp(/newsid=/i), new RegExp(/docid=MD/i), '/v/', '#']);
+			
+			db.articles.drop();
 
-				db.articles.drop();
-
-			window.jQuery('.wrap_history a').each(function(i, item) {
-				var url = window.jQuery(item).attr('href');
-				var title = window.jQuery(item).text();
-				var newsId, _id;
+			window.jQuery('li').each(function(i, item) {
+				var li = window.jQuery(item)
+					, url = li.find('a').attr('href')
+					, title = li.text()
+					, img = li.find('img').attr('src') || ''
+					, newsId;
 
 
 				splitWords.each(function(i, item) {
-					newsId = url.split(item)[1];
-					return newsId === undefined;
+					newsId = url.split(item)[1] || '';
+					newsId = newsId.substring(0,17)
+					return newsId === '';
 				});
 
 				// 뉴스 기사가 아니면 패스
-				if(newsId === undefined || !title){
+				if(!newsId || !title){
 					console.log(url)
 					return;
 				} 
 				else {
 					newsId = newsId.substring(0,17);
 
-					db.articles.findAndModify({query: { newsId : newsId }, update: {newsId : newsId, title: title, categoryKey: "top"}, upsert: true},  function(err, result) {
-						console.log(err, result)
+					db.articles.findOne({ "newsId": newsId }, function(err, result){
+						if(!err && !result){
+							db.articles.insert({
+								newsId : newsId, 
+								title: title, 
+								img: img,
+								categoryKey: "top"
+							}, function(err, result){
+								console.log("doc insert:", err, result);
+							});
+						} else {
+							console.log("newsId %s is exists", newsId );
+						}
 					});
+
+					// db.articles.findAndModify({query: { newsId : newsId }, update: {newsId : newsId, title: title, categoryKey: "top"}, upsert: true},  function(err, result) {
+					// 	console.log(err, result)
+					// });
 				}
 			});
 		}
