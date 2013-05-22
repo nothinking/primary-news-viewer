@@ -9,12 +9,13 @@ forever start -l .../privary-news-viewer.log make-top-api.js
 - 댓글 많은 뉴스 api
 - http://media.daum.net/export/json/16b7fa5961634ab8ba71211c87796f3a
 - http://media.daum.net/common/wing.data
-- 탑운영 api
+- 탑운영 api http://www.daum.net/pub/json_newsgrp.daum?dummy=1370482371785
 - api가 따로 없는 관계로 html파싱해서 데이터 가져오기.
 - 뉴스박스히스토리로 할지 개별 탭 기사목록으로 할지…
 - http://media.daum.net/netizen/newsbox/
 - 인기기사
 - http://media.daum.net/netizen/popular/
+- 뉴스 데이터 http://media.daum.net/api/service/news/view.jsonp?callback=?&newsId=
 
 
 ## node로 데이터 만들기 
