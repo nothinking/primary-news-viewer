@@ -49,9 +49,7 @@ require(["bootstrap", "backbone", "router", "action", "jqtouch"], function(boots
             // 리스트로왔어 액션해.
             // action.page("list", list);
         });
-        console.log("index");
-
-
+        console.log("list");
         
     });
 
@@ -72,6 +70,7 @@ require(["bootstrap", "backbone", "router", "action", "jqtouch"], function(boots
 
             model.fetch();
 
+            console.log("view", collection, id)
             
             window.m = model;
 
@@ -82,8 +81,9 @@ require(["bootstrap", "backbone", "router", "action", "jqtouch"], function(boots
     })
 
     !Backbone.History.started && Backbone.history.start({ "pushState": true });
+    // !Backbone.History.started && Backbone.history.start({ "pushState": false });
 
-    var jQT = new $.jQTouch({
+    var jQT = window.jQT = new $.jQTouch({
        "icon": "jqtouch.png",
        "addGlossToIcon": false,
        "statusBar": "black-translucent"

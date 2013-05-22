@@ -51,7 +51,7 @@ define(["backbone", "text!/template/articleItem.html", "text!/template/articleVi
 		"tagName": "li",
 		"template": _.template(itemHTML),
 		"events": {
-			"click a" : "view"
+			"click" : "clickHandler"
 		},
 		"initialize": function(options){
 			_.extend(this, {}, options);
@@ -61,6 +61,9 @@ define(["backbone", "text!/template/articleItem.html", "text!/template/articleVi
 		"render": function(){
 			this.$el.html(this.template(this.model.toJSON()));
 			return this;
+		},
+		"clickHandler": function(e){
+			// window.jQT
 		}	
 	});
 
