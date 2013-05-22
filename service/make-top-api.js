@@ -33,9 +33,7 @@ function action() {
 		, ['http://s1.daumcdn.net/svc/original/U03/cssjs/jquery/jquery-2.0.0.min.js']
 		, function(err, window) {
 			var data = []
-				, splitWords = $([/newsid=/ig, '/v/', '#']);
-
-				db.articles.drop();
+				, splitWords = $([new RegExp('newsid=','ig'), '/v/', '#']);
 
 			window.jQuery('.wrap_history a').each(function(i, item) {
 				var url = window.jQuery(item).attr('href');
@@ -56,9 +54,23 @@ function action() {
 				else {
 					newsId = newsId.substring(0,17);
 
-					db.articles.findAndModify({query: { newsId : newsId }, update: {newsId : newsId, title: title, categoryKey: "top"}, upsert: true},  function(err, result) {
-						console.log(err, result)
+					db.articles.findOne({ "newsId": newsId }, function(err, result){
+						if(!err && !result){
+							db.articles.insert({
+								newsId : newsId, 
+								title: title, 
+								categoryKey: "top"
+							}, function(err, result){
+								console.log("doc insert:", err, result);
+							});
+						} else {
+							console.log("newsId %s is exists", newsId );
+						}
 					});
+
+					// db.articles.findAndModify({query: { newsId : newsId }, update: {newsId : newsId, title: title, categoryKey: "top"}, upsert: true},  function(err, result) {
+					// 	console.log(err, result)
+					// });
 				}
 			});
 		}
