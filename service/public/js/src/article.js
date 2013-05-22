@@ -3,7 +3,9 @@ define(["backbone", "text!/template/articleItem.html", "text!/template/articleVi
 		"idAttribute": "_id",
 		"defaults": {
 			"newsId": "",
-			"title": ""
+			"title": "",
+			"content": "",
+			"img": ""
 		},
 		"parse": function(response, jqXHR, options){
 			if(response.content === undefined && response.newsId !== undefined){
@@ -76,6 +78,7 @@ define(["backbone", "text!/template/articleItem.html", "text!/template/articleVi
 		},
 		"render": function(){
 			this.collection.each(this.append, this);
+			this.trigger("render", this);
 		},
 		"append": function(model){
 			var view = new this.view({"model": model});
@@ -84,11 +87,20 @@ define(["backbone", "text!/template/articleItem.html", "text!/template/articleVi
 	});
 
 	var View = Item.extend({
-		"tagName": "div",
-		"className": "viewWrap",
 		"template": _.template(viewHTML),
 		"events": {
+		},
+		"initialize": function(options){
+			Item.prototype.initialize.apply(this, arguments);
 
+			this.$title = this.$(".toolbar h1");
+			this.$info = this.$(".info");
+		},
+		"render": function(){
+			this.$title.html( this.model.get("title") );
+			this.$info.html( this.model.get("content") );
+			this.trigger("render", this);
+			return this;
 		}
 	});
 

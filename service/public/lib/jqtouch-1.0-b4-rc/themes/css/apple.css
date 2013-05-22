@@ -1305,6 +1305,7 @@ body {
   height: 44px;
 }
 /* line 52, ../scss/include/_skeleton.scss */
+/*
 #jqt .toolbar > h1 {
   position: absolute;
   overflow: hidden;
@@ -1321,6 +1322,25 @@ body {
   color: white;
   text-shadow: #5c718e 0 -1px 0;
 }
+*/
+#jqt .toolbar > h1 {
+  position: absolute;
+  overflow: hidden;
+  left: 0;
+  right: 0;
+  padding: 0 85px;
+  bottom: 9px;
+  margin: 1px 0 0 0;
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 1.3em;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: white;
+  text-shadow: #5c718e 0 -1px 0;
+}
+
 /* line 71, ../scss/include/_skeleton.scss */
 #jqt.black-translucent .toolbar {
   padding-top: 30px;
