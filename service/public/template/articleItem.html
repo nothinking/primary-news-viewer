@@ -1,1 +1,6 @@
-<a href="/view/<%= categoryKey %>/<%= _id %>" data-navigate="true"><%= title %></a>
+<a href="/view/<%= categoryKey %>/<%= _id %>" data-navigate="true">
+	<% if (img) { %>
+		<img src="<%=img%>" alt="" align="absmiddle" />
+	<% } %>
+	<%= title %>
+</a>

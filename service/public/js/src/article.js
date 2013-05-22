@@ -1,4 +1,4 @@
-define(["backbone", "text!/template/articleItem.html", "text!/template/articleView.html"], function(Backbone, itemHTML, viewHTML){
+define(["backbone", "page", "text!/template/articleItem.html", "text!/template/articleView.html"], function(Backbone, Page, itemHTML, viewHTML){
 	var Model = Backbone.Model.extend({
 		"idAttribute": "_id",
 		"defaults": {
@@ -31,6 +31,18 @@ define(["backbone", "text!/template/articleItem.html", "text!/template/articleVi
 		},
 		"url": function(){
 			return "/api/" + this.attributes.categoryKey + "/" + this.id;
+		},
+		"prev": function(){
+			var i = this.collection.indexOf(this),
+				prevIndex = i - 1;
+
+			return prevIndex >= 0 && this.collection.at(prevIndex);
+		},
+		"next": function(){
+			var i = this.collection.indexOf(this),
+				nextIndex = i + 1;
+
+			return prevIndex < this.collection.length && this.collection.at(nextIndex);
 		}
 	});
 
@@ -69,38 +81,39 @@ define(["backbone", "text!/template/articleItem.html", "text!/template/articleVi
 		}	
 	});
 
-	var List = Backbone.View.extend({
-		"tagName": "ul",
+	var List = Page.View.extend({
 		"view": Item,
 		"initialize": function(options){
-			_.extend(this, {}, options);
+			Page.View.prototype.initialize.apply(this, arguments);
 			this.listenTo(this.collection, "sync", this.render);
 		},
 		"render": function(){
+			this.$content.empty();
 			this.collection.each(this.append, this);
-			this.trigger("render", this);
 		},
 		"append": function(model){
 			var view = new this.view({"model": model});
-			this.$el.append(view.render().$el);
+			this.$content.append(view.render().$el);
 		}
 	});
 
-	var View = Item.extend({
+	var View = Page.View.extend({
 		"template": _.template(viewHTML),
-		"events": {
-		},
-		"initialize": function(options){
-			Item.prototype.initialize.apply(this, arguments);
+		"events": _.extend(Page.View.prototype.events, {
 
-			this.$title = this.$(".toolbar h1");
-			this.$info = this.$(".info");
+		}),
+		"initialize": function(options){
+			Page.View.prototype.initialize.apply(this, arguments);
+			this.listenTo(this.model, "change", this.render);
 		},
 		"render": function(){
 			this.$title.html( this.model.get("title") );
-			this.$info.html( this.model.get("content") );
-			this.trigger("render", this);
+			this.$content.html( this.model.get("content") );
 			return this;
+		},
+		"swipeleftHandler": function() {
+			var m = this.model.next();
+			console.log(m.get("id"));
 		}
 	});
 

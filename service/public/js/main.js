@@ -8,7 +8,7 @@ require.config({
         "bootstrap" : "../lib/bootstrap",
         "moment": "../lib/moment",
         "text": "../lib/text",
-        "jqtouch": "../../lib/jqtouch-1.0-b4-rc/src/jqtouch-jquery"
+        "hammer": "../lib/jquery.hammer.min"
     },
 
     shim: {
@@ -31,35 +31,31 @@ require(["bootstrap", "backbone", "router", "action"], function(bootstrap, Backb
     // var action = new Action({});
 
 
-    // 테스트 스파게티 파티
-
-    var test = {};
+    var _cache = {};
 
     router.route("", "list", function(){
         //var list = action.page("list");
 
         require(["article"], function(Article){
-            if(test.list) {
-                test.list.collection.fetch({"reset": true});
+            if(_cache.list) {
+                _cache.list.collection.fetch({"reset": true});
             } else {
-                var collection = new Article.Collection();
-                var list = test.list = new Article.List({ 
-                    "el": "#test",
+                var collection = _cache.collection = new Article.Collection();
+                var list = _cache.list = new Article.List({ 
+                    "el": "#list",
                     "collection": collection
                 });
                 collection.fetch({"reset": true});
                 window.c = collection;
             }
-            // 리스트로왔어 액션해.
-            // action.page("list", list);
         });
         console.log("list");
     });
 
     router.route("view/:collection/:id", "view", function(collection, id, options){
         require(["article"], function(Article){
-            if(test.view){
-                test.view.model.set({
+            if(_cache.view){
+                _cache.view.model.set({
                     "_id": id,
                     "categoryKey": collection
                 }, {
@@ -71,7 +67,7 @@ require(["bootstrap", "backbone", "router", "action"], function(bootstrap, Backb
                     "_id": id,
                     "categoryKey": collection
                 });
-                var view = test.view = new Article.View({
+                var view = _cache.view = new Article.View({
                     "el": "#view",
                     "model": model
                 });
@@ -83,8 +79,8 @@ require(["bootstrap", "backbone", "router", "action"], function(bootstrap, Backb
                 window.m = model;
             }
 
-            // 뷰로왔어 뷰 들어와.
-            // action.page("view", view);
+            // 이전 다음 기사 스와이프 처리하기,
+
             
         });
     });
@@ -94,7 +90,8 @@ require(["bootstrap", "backbone", "router", "action"], function(bootstrap, Backb
         // 테스트 
         var $target = $("#" + key),
             $current = $("#jqt > .current"),
-            className = $target.attr("class") || "slideleft";
+            direction = "left",
+            className = "slide";
 
         if($target.is(".current")) {
             return;
@@ -102,21 +99,36 @@ require(["bootstrap", "backbone", "router", "action"], function(bootstrap, Backb
 
         if($current.length === 0){
             $target.addClass("current");
-            return
+            return;
         }
 
         // $current.removeClass("current").addClass([ className, "out" ].join(" "));
         
-        $current.addClass([ className, "out" ].join(" "));
+        if($target.data("to") == $current.attr("id")){
+            direction = "right";
+            $current.data("to", '');
+            console.log('back');
+        }
+        else {
+            console.log('f');
+            // data에 to, from 세팅
+            $current.data("to", $target.attr("id"));
+        }
+
+
+        $current.addClass([ className + direction, "out" ].join(" "));
+
 
         $target.addClass("current");
 
         $target[0].offsetWidth;
 
-        $target.addClass(className + " in").one("webkitAnimationEnd animationend", function(e){
-            $current.removeClass("current out " + className );
-            $target.removeClass("in");
+        $target.addClass(className + direction + " in").one("webkitAnimationEnd animationend", function(e){
+            $current.removeClass("current out " + className + direction );
+            $target.removeClass("in " + className + direction );
         });
+
+
                 
     });
 

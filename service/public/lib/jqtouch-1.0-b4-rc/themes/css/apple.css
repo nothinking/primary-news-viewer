@@ -1326,9 +1326,8 @@ body {
 #jqt .toolbar > h1 {
   position: absolute;
   overflow: hidden;
-  left: 0;
-  right: 0;
-  padding: 0 85px;
+  left: 85px;
+  right: 85px;
   bottom: 9px;
   margin: 1px 0 0 0;
   font-size: 20px;
@@ -1910,7 +1909,7 @@ body {
 #jqt .info {
   font-size: 12px;
   line-height: 16px;
-  text-align: center;
+  text-align: left;
   color: #444;
   padding: 15px;
   font-weight: bold;
