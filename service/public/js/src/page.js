@@ -19,13 +19,16 @@ define(["backbone", "hammer"], function(Backbone, hammer){
 	var View = Backbone.View.extend({
 		"events": {
 			"click .back": "backBtnClickHandler",
-			"swipeleft": "swipeleftHandler"
+			"swipeleft": "swipeleftHandler",
+			"swiperight": "swiperightHandler",
+			"drag": "dragHandler",
+			"dragend": "dragendHandler"
 		},
 		"initialize": function(options){
 			_.extend(this, {}, options);
 			this.$title = this.$(".toolbar h1");
 			this.$content = this.$(".content");
-			// this.$el.hammer();
+			this.$el.hammer();
 
 			//console.log(this);
 		},
@@ -33,7 +36,8 @@ define(["backbone", "hammer"], function(Backbone, hammer){
 		"animate": function(className){
 			this.$el.addClass(className);
 			this.$el.one("webkitAnimationEnd animationend", function(){
-				$(this).removeClass(className);
+				$(this).removeClass(className).css("left", "auto");
+
 			});
 			return this;
 		},
@@ -45,7 +49,16 @@ define(["backbone", "hammer"], function(Backbone, hammer){
 
 		},
 		"swipeleftHandler": function(e) {
-			
+			return;
+		},
+		"swiperightHandler": function(e) {
+			return;
+		},
+		"dragHandler": function(e) {
+			return;
+		},
+		"dragendHandler": function(e){
+			return
 		}
 	});
 

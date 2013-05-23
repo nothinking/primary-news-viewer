@@ -35,20 +35,25 @@ define(["backbone", "page", "article"], function(Backbone, Page, Article){
 							"title": "top",
 							"content": collection
 						});
-						
-
 						var view = new Article.List({
 							"el": "#list",
 							"model": model
 						});
 					break;
 					case "view":
+						var collection = Article.Factory.getCollection( params[0] );
+						var model = new Page.Model({
+							// top은 category로 부터 받거나 어쩌거나 
+							"title": "top",
+							"content": collection,
+							"selectedId": params[1]
+						});
 						var view = new Article.View({
 							"el": "#view",
+							"model": model,
 							"parent": "list",
 							"child": null
 						});
-						view.setModel(Article.Factory.getModel(params[0], params[1]));
 					break;
 				}
 
@@ -80,6 +85,7 @@ define(["backbone", "page", "article"], function(Backbone, Page, Article){
 			
 			targetPage.$el.addClass("current");
 
+
 			window.setTimeout(function(){
 				if(this.currentPage){
 					var targetAnimate = targetPage.$el.data("animate") || "slide",
@@ -90,6 +96,7 @@ define(["backbone", "page", "article"], function(Backbone, Page, Article){
 						.$el.one("webkitAnimationEnd animationend", function(){
 							console.log(this);
 							$(this).removeClass("current");
+							window.scrollTo(0, 1)
 						});
 				} 
 				

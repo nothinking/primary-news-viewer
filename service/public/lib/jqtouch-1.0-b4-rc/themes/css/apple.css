@@ -651,6 +651,7 @@ body {
   box-orient: vertical;
   -webkit-box-flex: 1;
   box-flex: 1;
+  -webkit-transform:translate3D(0,0,0);
 }
 /* line 49, ../scss/include/_base.scss */
 #jqt > .current {
@@ -1250,11 +1251,6 @@ body {
     -webkit-transform: rotateY(90deg) translateZ(320px);
     opacity: .5;
   }
-}
-
-/* line 5, ../scss/include/_skeleton.scss */
-body {
-  background: black;
 }
 
 /* line 9, ../scss/include/_skeleton.scss */
@@ -1983,8 +1979,26 @@ body {
 }
 /* line 80, ../scss/apple.scss */
 #jqt .info {
-  background: #dce1eb;
+  /* background: #dce1eb; */
+  background: white;
   text-shadow: rgba(255, 255, 255, 0.8) 0 1px 0;
   color: #4c566c;
   border-top: 1px solid rgba(76, 86, 108, 0.3);
+}
+#jqt .content {
+   position:relative;
+}
+#jqt .content .image {
+   width:auto !important;
+}
+#jqt .content .img {
+   width:100%;
+   text-align:center;
+}
+#jqt .content img {
+   max-width: 100%;
+   height:auto !important;
+}
+#jqt .content > div:not(.active) { 
+   display:none;
 }

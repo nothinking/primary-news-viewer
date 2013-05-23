@@ -44,7 +44,7 @@ define(["backbone", "page", "text!/public/template/articleItem.html", "text!/pub
 			var i = this.collection.indexOf(this),
 				nextIndex = i + 1;
 
-			return prevIndex < this.collection.length && this.collection.at(nextIndex);
+			return nextIndex < this.collection.length && this.collection.at(nextIndex);
 		}
 	});
 
@@ -127,22 +127,87 @@ define(["backbone", "page", "text!/public/template/articleItem.html", "text!/pub
 				"parent": "list",
 				"child": "null"
 			}, options);
+			
 			Page.View.prototype.initialize.apply(this, arguments);
-			this.model && this.listenTo(this.model, "change", this.render);
+
+			this.views = {};
+
+			this.collection = this.model.get("content");
+
+			this.listenToOnce(this.collection, "sync", this.select);
+
+			// this.model && this.listenTo(this.model, "change", this.render);
 		},
-		"render": function(){
-			this.$title.html( this.model.get("title") );
-			this.$content.html( this.model.get("content") );
+		"select": function(){
+			var id = this.model.get("selectedId"),
+				model = this.collection.get(id);
+			this.selectedModel = model;
+			this.render(this.selectedModel);
+		},
+		"render": function(model){
+			var view = this.views[model.cid],
+				prevModel = model.prev(),
+				nextModel = model.next(),
+				prevView = this.views[prevModel.cid],
+				nextView = this.views[nextModel.cid];
+
+				console.log(prevModel, nextModel)
+
+			if(!view) {
+
+				view = $("<div>", { "id": this.selectedModel.cid, "class": "active" });
+
+				this.$content.append($("<div>", { "id": prevModel.cid }).html(prevModel.get("content")));
+				this.$content.append(view);
+				this.$content.append($("<div>", { "id": nextModel.cid }).html(nextModel.get("content")));
+				view.html(model.get("content"));
+			}
+
+			this.$title.html( model.get("title") );
+
+			// this.$content.append( this.selectedModel.get("content") );
 			return this;
 		},
-		"swipeleftHandler": function() {
-			var m = this.model.next();
-			console.log(m.get("title"));
-		},
 		"setModel": function(model){
-			this.stopListening(this.model);
-			this.model = model;
-			this.listenTo(this.model, "change", this.render);
+			this.selectedModel = model;
+			return this;
+		},
+		"_setNextModel": function(){
+			var model = this.model.next();
+			if(model){
+				this.setModel(model).select();
+			}
+			console.log("next")
+		},
+		"_setPrevModel": function(){
+			console.log("prev")
+			var model = this.model.prev();
+			if(model){
+				this.setModel(model).select();
+			}
+		},
+		"swipeleftHandler": function(e) {
+			this._setNextModel();
+		},
+		"swiperightHandler": function(e) {
+			this._setPrevModel();
+		},
+		"dragHandler": function(e) {
+			switch(e.gesture.direction){
+				case "left":
+				case "right":
+					this.$content.css("left", e.gesture.deltaX);
+					break;
+			}
+			return;
+		},
+		"dragendHandler": function(e){
+			var isReached = this.$el.width() < Math.abs(e.gesture.distance) * 2;
+			if(isReached){
+				this.animate("slide" + e.gesture.direction + " out");
+			} else {
+				this.$el.css("left", "auto");
+			}
 		}
 	});
 
