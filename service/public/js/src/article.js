@@ -173,7 +173,7 @@ define(["backbone", "page", "text!/public/template/articleItem.html", "text!/pub
 			return this;
 		},
 		"_setNextModel": function(){
-			var model = this.model.next();
+			var model = this.selectedModel.next();
 			if(model){
 				this.setModel(model).select();
 			}
@@ -181,7 +181,7 @@ define(["backbone", "page", "text!/public/template/articleItem.html", "text!/pub
 		},
 		"_setPrevModel": function(){
 			console.log("prev")
-			var model = this.model.prev();
+			var model = this.selectedModel.prev();
 			if(model){
 				this.setModel(model).select();
 			}
@@ -206,7 +206,7 @@ define(["backbone", "page", "text!/public/template/articleItem.html", "text!/pub
 			if(isReached){
 				this.animate("slide" + e.gesture.direction + " out");
 			} else {
-				this.$el.css("left", "auto");
+				this.$content.css("left", "auto");
 			}
 		}
 	});
