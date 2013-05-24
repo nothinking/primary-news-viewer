@@ -5,9 +5,13 @@ var mongoapi = require("../mongoapi");
 var db = mongojs('uidev.media.daum.net:27017/primarynews', [ "articles" ]);
 
 
+var test = function(req, res){
+	res.render("test", {})
+};
+
 var index = function(req, res){
 	res.render("index", {})
-};
+}; 
 
 var api = function(req, res){
 
@@ -54,6 +58,6 @@ var api = function(req, res){
 	}
 };
 
-
+exports.test =test;
 exports.index = index;
 exports.api = api;

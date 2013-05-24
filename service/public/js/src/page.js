@@ -1,4 +1,4 @@
-define(["backbone", "hammer"], function(Backbone, hammer){
+define(["backbone", "hammer", "text!/public/template/page.html"], function(Backbone, hammer, html){
 
 	var Model = Backbone.Model.extend({
 		"defaults": {
@@ -17,48 +17,19 @@ define(["backbone", "hammer"], function(Backbone, hammer){
 	});
 
 	var View = Backbone.View.extend({
+		"template": _.template(html),
+		"className": "item",
 		"events": {
-			"click .back": "backBtnClickHandler",
-			"swipeleft": "swipeleftHandler",
-			"swiperight": "swiperightHandler",
-			"drag": "dragHandler",
-			"dragend": "dragendHandler"
 		},
 		"initialize": function(options){
 			_.extend(this, {}, options);
+
+			this.$el.html(this.template(this.model.toJSON()));
+			
 			this.$title = this.$(".toolbar h1");
 			this.$content = this.$(".content");
-			this.$el.hammer();
 
 			//console.log(this);
-		},
-
-		"animate": function(className){
-			this.$el.addClass(className);
-			this.$el.one("webkitAnimationEnd animationend", function(){
-				$(this).removeClass(className).css("left", "auto");
-
-			});
-			return this;
-		},
-
-		"backBtnClickHandler" : function(e) {
-			e.preventDefault();
-
-			history.back();
-
-		},
-		"swipeleftHandler": function(e) {
-			return;
-		},
-		"swiperightHandler": function(e) {
-			return;
-		},
-		"dragHandler": function(e) {
-			return;
-		},
-		"dragendHandler": function(e){
-			return
 		}
 	});
 

@@ -654,13 +654,13 @@ body {
   -webkit-transform:translate3D(0,0,0);
 }
 /* line 49, ../scss/include/_base.scss */
-#jqt > .current {
+#jqt > .active {
   z-index: 10;
 }
-/* line 53, ../scss/include/_base.scss */
-#jqt > :not(.current) {
+#jqt > :not(.active) {
   display: none;
 }
+
 /* line 57, ../scss/include/_base.scss */
 #jqt.touchscroll:not(.animating3d) {
   overflow-y: auto;
@@ -686,7 +686,7 @@ body {
 #jqt .in, #jqt .out {
   -webkit-animation-duration: 250ms;
   -webkit-animation-fill-mode: both;
-  -webkit-animation-timing-function: ease-in-out;
+  -webkit-animation-timing-function: ease-out;
 }
 /* line 82, ../scss/include/_base.scss */
 #jqt .in {
@@ -838,9 +838,11 @@ body {
 
 @-webkit-keyframes slideLeftIn {
   /* line 107, ../scss/include/_animations.scss */
+  /*
   0% {
     -webkit-transform: translateX(100%);
   }
+  */
 
   /* line 110, ../scss/include/_animations.scss */
   100% {
@@ -850,9 +852,11 @@ body {
 
 @-webkit-keyframes slideLeftOut {
   /* line 116, ../scss/include/_animations.scss */
+  /*
   0% {
     -webkit-transform: translateX(0px);
   }
+  */
 
   /* line 119, ../scss/include/_animations.scss */
   100% {
@@ -873,10 +877,11 @@ body {
 
 @-webkit-keyframes slideRightIn {
   /* line 137, ../scss/include/_animations.scss */
+  /*
   0% {
     -webkit-transform: translateX(-100%);
   }
-
+   */
   /* line 140, ../scss/include/_animations.scss */
   100% {
     -webkit-transform: translateX(0);
@@ -885,9 +890,11 @@ body {
 
 @-webkit-keyframes slideRightOut {
   /* line 146, ../scss/include/_animations.scss */
+  /*
   0% {
     -webkit-transform: translateX(0);
   }
+  */
 
   /* line 149, ../scss/include/_animations.scss */
   100% {

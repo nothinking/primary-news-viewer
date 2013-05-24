@@ -18,9 +18,10 @@ app.use("/public", express.static(path.join(__dirname, "public")));
 
 app.all("/api/:collection", routes.api);
 app.all("/api/:collection/:id", routes.api);
+app.get("/test", routes.test);
+
 app.get("/:collection", routes.index);
 app.get("/:collection/:id", routes.index);
-
 
 http.createServer(app).listen(app.get("port"), function(){
 	console.log("server listening on port " + app.get("port"));

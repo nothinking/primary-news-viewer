@@ -1,4 +1,4 @@
-define(["backbone", "page", "text!/public/template/articleItem.html", "text!/public/template/articleView.html"], function(Backbone, Page, itemHTML, viewHTML){
+define(["backbone", "page", "text!/public/template/pagelist.html", "text!/public/template/articleItem.html"], function(Backbone, Page, listHTML, itemHTML){
 	var Model = Page.Model.extend({
 		"idAttribute": "_id",
 		"defaults": _.extend({}, Page.Model.prototype.defaults, {
@@ -80,7 +80,6 @@ define(["backbone", "page", "text!/public/template/articleItem.html", "text!/pub
 		"tagName": "li",
 		"template": _.template(itemHTML),
 		"events": {
-			"click" : "clickHandler"
 		},
 		"initialize": function(options){
 			_.extend(this, {}, options);
@@ -90,14 +89,12 @@ define(["backbone", "page", "text!/public/template/articleItem.html", "text!/pub
 		"render": function(){
 			this.$el.html(this.template(this.model.toJSON()));
 			return this;
-		},
-		"clickHandler": function(e){
-			// window.jQT
 		}	
 	});
 
 	var List = Page.View.extend({
 		"view": Item,
+		"template": _.template(listHTML),
 		"initialize": function(options){
 			options = _.extend({
 				"parent": "category",
@@ -118,7 +115,6 @@ define(["backbone", "page", "text!/public/template/articleItem.html", "text!/pub
 	});
 
 	var View = Page.View.extend({
-		"template": _.template(viewHTML),
 		"events": _.extend(Page.View.prototype.events, {
 
 		}),
@@ -127,87 +123,16 @@ define(["backbone", "page", "text!/public/template/articleItem.html", "text!/pub
 				"parent": "list",
 				"child": "null"
 			}, options);
-			
+
 			Page.View.prototype.initialize.apply(this, arguments);
-
-			this.views = {};
-
-			this.collection = this.model.get("content");
-
-			this.listenToOnce(this.collection, "sync", this.select);
+			this.listenTo(this.model, "change", this.render);
 
 			// this.model && this.listenTo(this.model, "change", this.render);
 		},
-		"select": function(){
-			var id = this.model.get("selectedId"),
-				model = this.collection.get(id);
-			this.selectedModel = model;
-			this.render(this.selectedModel);
-		},
 		"render": function(model){
-			var view = this.views[model.cid],
-				prevModel = model.prev(),
-				nextModel = model.next(),
-				prevView = this.views[prevModel.cid],
-				nextView = this.views[nextModel.cid];
-
-				console.log(prevModel, nextModel)
-
-			if(!view) {
-
-				view = $("<div>", { "id": this.selectedModel.cid, "class": "active" });
-
-				this.$content.append($("<div>", { "id": prevModel.cid }).html(prevModel.get("content")));
-				this.$content.append(view);
-				this.$content.append($("<div>", { "id": nextModel.cid }).html(nextModel.get("content")));
-				view.html(model.get("content"));
-			}
-
 			this.$title.html( model.get("title") );
-
-			// this.$content.append( this.selectedModel.get("content") );
+			this.$content.html( this.model.get("content") );
 			return this;
-		},
-		"setModel": function(model){
-			this.selectedModel = model;
-			return this;
-		},
-		"_setNextModel": function(){
-			var model = this.selectedModel.next();
-			if(model){
-				this.setModel(model).select();
-			}
-			console.log("next")
-		},
-		"_setPrevModel": function(){
-			console.log("prev")
-			var model = this.selectedModel.prev();
-			if(model){
-				this.setModel(model).select();
-			}
-		},
-		"swipeleftHandler": function(e) {
-			this._setNextModel();
-		},
-		"swiperightHandler": function(e) {
-			this._setPrevModel();
-		},
-		"dragHandler": function(e) {
-			switch(e.gesture.direction){
-				case "left":
-				case "right":
-					this.$content.css("left", e.gesture.deltaX);
-					break;
-			}
-			return;
-		},
-		"dragendHandler": function(e){
-			var isReached = this.$el.width() < Math.abs(e.gesture.distance) * 2;
-			if(isReached){
-				this.animate("slide" + e.gesture.direction + " out");
-			} else {
-				this.$content.css("left", "auto");
-			}
 		}
 	});
 
