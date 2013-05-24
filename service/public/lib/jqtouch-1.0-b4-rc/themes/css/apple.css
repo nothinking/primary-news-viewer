@@ -2006,6 +2006,3 @@ body {
    max-width: 100%;
    height:auto !important;
 }
-#jqt .content > div:not(.active) { 
-   display:none;
-}

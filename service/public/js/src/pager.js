@@ -23,7 +23,7 @@ require(["hammer", "bootstrap"], function(Hammer) {
         "select": function($element){
             var $fromElement = this.$element.find("> .active"),
                 $toElement = $element,
-                direction = $fromElement.index() > $toElement.index() ? "left" : "right";
+                direction = $fromElement.index() > $toElement.index() ? "right" : "left";
 
             this.animate($fromElement, $toElement, direction);
         },
@@ -32,7 +32,7 @@ require(["hammer", "bootstrap"], function(Hammer) {
                 $toElement = $(toElement),
                 className = ($toElement.data("animate") || "slide") + direction;
 
-            if($toElement.length > 0){
+            if($fromElement.length > 0 && $toElement.length > 0){
                 $fromElement.css("-webkit-transform", function(){
                     return this.style.webkitTransform || "translateX(" + ( direction === "left" ? "0" : "100%" ) + ")";
                 });
@@ -62,7 +62,7 @@ require(["hammer", "bootstrap"], function(Hammer) {
                 }, 0);
 
             } else {
-                $fromElement.addClass("fromElement");
+                $toElement.addClass("active");
             }
         },
         "dragHandler": function(e){
