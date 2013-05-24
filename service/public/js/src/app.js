@@ -3,64 +3,65 @@ define(["backbone", "page", "article", "pager"], function(Backbone, Page, Articl
 	var App = Backbone.View.extend({
 		"el": "#jqt",
 		"router": null,
-		"pages": {},
+		"pages": {
+			"list": {},
+			"view": {}
+		},
+		"events": {
+
+		},
 		"initialize": function(options){
 			_.extend(this, {
 				"router": new Backbone.Router({
 					"routes": {
-						":collection": "list",
-						":collection/:id": "view"
+						":category": "list",
+						":category/:id": "view"
 					}
 				})
 			}, options);
 
-			this.listenTo(this.router, "route", this.routeHandler);
+			this.pager = this.$el.pager().data("pager");
+
+			this.listenTo(this.router, "route:list", this.routeListHandler);
+			this.listenTo(this.router, "route:view", this.routeViewHandler);
+
 			!Backbone.History.started && Backbone.history.start({ "pushState": true });
 		},
 		"routeHandler": function(key, params){
 			this.render(key, params);
 		},
-		"render": function(key, params){
-			var page = this.pages[key];
-			if(!page) {
-				switch(key){
-					case "list":
-						var collection = Article.Factory.getCollection( params[0] );
-						var model = new Page.Model({
-							"title": "top",
-							"content": collection
-						});
-						var view = new Article.List({
-							"model": model
-						});
-					break;
-					case "view":
-						var model = Article.Factory.getModel(params[0], params[1])
-						var view = new Article.View({
-							"model": model
-						});
-					break;
-				}
+		"routeListHandler": function(categoryKey){
+			var page = this.pages.list[categoryKey];
 
-				page = this.pages[key] = view;
-				page.model.fetch();
-
-				this.$el.append(page.$el);
-
-			} else {
-				switch(key){
-					case "list":
-						page.model.get("content").categoryKey = params[0];
-						page.model.fetch();
-					break;
-					case "view":
-						page.model.set("selectedId", params[1]);
-						page.select();
-					break;
-				}
+			// 리스트 페이지가 없으면 
+			if(page === undefined){
+				var view = new Article.List({
+					"model": new Page.Model({
+						"title": categoryKey,
+						"article": Article.Factory.getCollection(categoryKey)
+					})
+				});
+				this.$el.prepend(view.$el);
+				page = this.pages.list[categoryKey] = view;
 			}
+			page.model.categoryKey = categoryKey;
+			page.model.get("article").fetch();
+			this.pager.select(page.$el);
+		},
+		"routeViewHandler": function(categoryKey, id){
+			var page = (this.pages.view[categoryKey] || (this.pages.view[categoryKey] = {}))[id];
 
-			this.$el.pager(page.$el);
+			if(page === undefined){
+				var view = new Article.View({
+					"model": new Page.Model({
+						"article": Article.Factory.getModel(categoryKey, id)
+					})
+				});
+				this.$el.append(view.$el);
+				page = this.pages.view[categoryKey][id] = view;
+			}
+			// page.model.get("article").fetch();
+			this.pager.select(page.render().$el);
 		}
 	});
 

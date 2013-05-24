@@ -1,20 +1,18 @@
 define(["backbone", "page", "text!/public/template/pagelist.html", "text!/public/template/articleItem.html"], function(Backbone, Page, listHTML, itemHTML){
-	var Model = Page.Model.extend({
+	var Model = Backbone.Model.extend({
 		"idAttribute": "_id",
-		"defaults": _.extend({}, Page.Model.prototype.defaults, {
+		"defaults": {
 			"newsId": "",
 			"title": "",
 			"content": "",
 			"img": ""
-		}),
+		},
 		"parse": function(response, jqXHR, options){
 			if(response.content === undefined && response.newsId !== undefined){
 				this.load(response.newsId);
 			};
 			return response;
 		},
-		"parent": "list",
-		"child": null,
 		"load": function(newsId){
 			var that = this,
 				options = {
@@ -70,6 +68,7 @@ define(["backbone", "page", "text!/public/template/pagelist.html", "text!/public
 					"categoryKey": this.categoryKey
 				});
 				this.add(model);
+				model.fetch();
 			}
 
 			return model;
@@ -101,16 +100,19 @@ define(["backbone", "page", "text!/public/template/pagelist.html", "text!/public
 				"child": "list"
 			}, options);
 			Page.View.prototype.initialize.apply(this, arguments);
-			this.listenTo(this.model.get("content"), "sync", this.render);
+			this.listenTo(this.model.get("article"), "sync", this.render);
 		},
 		"render": function(){
 			this.$title.html( this.model.get("title") );
 			this.$content.empty();
-			this.model.get("content").each(this.append, this);
+			this.model.get("article").each(this.append, this);
 		},
 		"append": function(model){
 			var view = new this.view({"model": model});
 			this.$content.append(view.render().$el);
+		},
+		"showHandler": function(e){
+			Backbone.history.navigate("/" + this.model.get("article").categoryKey);
 		}
 	});
 
@@ -125,14 +127,21 @@ define(["backbone", "page", "text!/public/template/pagelist.html", "text!/public
 			}, options);
 
 			Page.View.prototype.initialize.apply(this, arguments);
-			this.listenTo(this.model, "change", this.render);
-
+			this.listenTo(this.model.get("article"), "change", this.render);
+			this.listenTo(this.model.get("article"), "sync", this.render);
 			// this.model && this.listenTo(this.model, "change", this.render);
 		},
-		"render": function(model){
-			this.$title.html( model.get("title") );
-			this.$content.html( this.model.get("content") );
+		"render": function(){
+			this.$title.html( this.model.get("article").get("title") );
+			this.$content.html( this.model.get("article").get("content") );
 			return this;
+		},
+		"showHandler": function(e){
+			Backbone.history.navigate("/" + this.model.get("article").get("categoryKey") + "/" + this.model.get("article").get("_id"));
+		},
+		"backClickHandler": function(e){
+			e.preventDefault();
+			Backbone.history.navigate("/" + this.model.get("article").get("categoryKey"), { "trigger": true });
 		}
 	});
 
