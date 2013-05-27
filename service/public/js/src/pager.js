@@ -34,11 +34,11 @@ require(["hammer", "bootstrap"], function(Hammer) {
 
             if($fromElement.length > 0 && $toElement.length > 0){
                 $fromElement.css("-webkit-transform", function(){
-                    return this.style.webkitTransform || "translateX(" + ( direction === "left" ? "0" : "100%" ) + ")";
+                    return this.style.webkitTransform || "translateX(" + ( direction === "left" ? "0" : "0" ) + ")";
                 });
 
                 $toElement.css("-webkit-transform", function(){
-                    return this.style.webkitTransform || "translateX(" + ( direction === "left" ? "100%" : "0" ) + ")";
+                    return this.style.webkitTransform || "translateX(" + ( direction === "left" ? "100%" : "-100%" ) + ")";
                 }).addClass("active");
 
                 window.setTimeout(function(){
@@ -59,8 +59,7 @@ require(["hammer", "bootstrap"], function(Hammer) {
                                 .trigger(new $.Event("page:shown", { "target": $toElement[0], "relatedTarget": $fromElement[0] }));
                         })
                         .trigger(new $.Event("page:show", { "target": $toElement[0], "relatedTarget": $fromElement[0] }));
-                }, 0);
-
+                }, 100);
             } else {
                 $toElement.addClass("active");
             }
