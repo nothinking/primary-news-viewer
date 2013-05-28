@@ -11,6 +11,7 @@ define(["backbone", "page", "text!/public/template/pagelist.html", "text!/public
 			if(response.content === undefined && response.newsId !== undefined){
 				this.load(response.newsId);
 			};
+			response.content = response.content.replace(/<object.*<\/object>/ig, "");
 			return response;
 		},
 		"load": function(newsId){
@@ -43,6 +44,9 @@ define(["backbone", "page", "text!/public/template/pagelist.html", "text!/public
 				nextIndex = i + 1;
 
 			return nextIndex < this.collection.length && this.collection.at(nextIndex);
+		},
+		"index": function(){
+			return this.collection.indexOf(this);
 		}
 	});
 
@@ -50,6 +54,9 @@ define(["backbone", "page", "text!/public/template/pagelist.html", "text!/public
 		"model": Model,
 		"url": function(){
 			return "/api/" + this.categoryKey;
+		},
+		"comparator": function(model){
+			return model.get("newsId");
 		},
 		"initialize": function(models, options){
 
@@ -61,6 +68,7 @@ define(["backbone", "page", "text!/public/template/pagelist.html", "text!/public
 			};
 		},
 		"getOrAdd": function(id){
+			console.log(id)
 			var model = this.get(id);
 			if(!model){
 				model = new this.model({
@@ -113,12 +121,15 @@ define(["backbone", "page", "text!/public/template/pagelist.html", "text!/public
 		},
 		"showHandler": function(e){
 			Backbone.history.navigate("/" + this.model.get("article").categoryKey);
+		},
+		"index": function(){
+			return -1;
 		}
 	});
 
 	var View = Page.View.extend({
 		"events": _.extend(Page.View.prototype.events, {
-
+			"page:shown": "shownHandler"
 		}),
 		"initialize": function(options){
 			options = _.extend({
@@ -137,19 +148,67 @@ define(["backbone", "page", "text!/public/template/pagelist.html", "text!/public
 			return this;
 		},
 		"showHandler": function(e){
-			Backbone.history.navigate("/" + this.model.get("article").get("categoryKey") + "/" + this.model.get("article").get("_id"));
+			// Backbone.history.navigate("/" + this.model.get("article").get("categoryKey") + "/" + this.model.get("article").get("_id"));
+		},
+		"shownHandler": function(e){
+			Backbone.history.navigate("/" + this.model.get("article").get("categoryKey") + "/" + this.model.get("article").get("_id"), { "trigger": true });
 		},
 		"backClickHandler": function(e){
 			e.preventDefault();
 			Backbone.history.navigate("/" + this.model.get("article").get("categoryKey"), { "trigger": true });
+		},
+		"index": function(){
+			return this.model.get("article").index();
 		}
 	});
 
 	var Factory = {
 		// NOT IMPLEMENTED
 		"collections": {},
+		"lists": {},
+		"views": {},
+		"getList": function(key){
+			var list = this.lists[key];
+
+			// 리스트 페이지가 없으면 
+			if(list === undefined){
+				list = new List({
+					"model": new Page.Model({
+						"title": key,
+						"article": this.getCollection(key)
+					})
+				});
+				this.lists[key] = list;
+			}
+
+			list.model.categoryKey = key;
+
+			return list;
+		},
+		"getView": function(key, id){
+			var view;
+
+			if(id === undefined){
+				view = this.getList(key);
+			} else {
+				view = this.views[id];
+				if(view === undefined){
+					view = new View({
+						"model": new Page.Model({
+							"article": this.getModel(key, id)
+						})
+					});
+					this.views[id] = view;
+				}
+			}
+
+			return view;
+		},
 		"getCollection": function(key){
 			var collection = this.collections[key] || (this.collections[key] = new Collection(null, {"categoryKey": key}));
+			if(collection.length === 0){
+				collection.fetch();
+			}
 			return collection;
 		},
 		"getModel": function(key, id){

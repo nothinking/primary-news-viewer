@@ -13,6 +13,7 @@ require(["hammer", "bootstrap"], function(Hammer) {
         this.initialize();
     };
     Pager.prototype = {
+        "isMoving": false,
         "initialize": function(){
             this.hammer = Hammer(this.$element);
             this.$element
@@ -30,39 +31,44 @@ require(["hammer", "bootstrap"], function(Hammer) {
         "animate": function(fromElement, toElement, direction){
             var $fromElement = $(fromElement),
                 $toElement = $(toElement),
-                className = ($toElement.data("animate") || "slide") + direction;
+                className = ($toElement.data("animate") || "slide") + direction,
+                that = this;
 
-            if($fromElement.length > 0 && $toElement.length > 0){
+            if(!$fromElement.is($toElement) && $fromElement.length > 0 && $toElement.length > 0){
                 $fromElement.css("-webkit-transform", function(){
                     return this.style.webkitTransform || "translateX(" + ( direction === "left" ? "0" : "0" ) + ")";
                 });
 
                 $toElement.css("-webkit-transform", function(){
                     return this.style.webkitTransform || "translateX(" + ( direction === "left" ? "100%" : "-100%" ) + ")";
-                }).addClass("active");
+                });
 
                 window.setTimeout(function(){
                     $fromElement
                         .addClass(className + " out")
                         .one("webkitAnimationEnd animationend", function(e){
-                            $(this).removeClass(className + " out active")
+                            $(this).removeClass(className + " dragging active out")
                                 .css("-webkit-transform", "")
                                 .trigger(new $.Event("page:hidden", { "target": $toElement[0], "relatedTarget": $fromElement[0] }));
+                            that.isMoving = false;
                         })
                         .trigger(new $.Event("page:hide", { "target": $toElement[0], "relatedTarget": $fromElement[0] }));
 
                     $toElement
                         .addClass(className + " in")
                         .one("webkitAnimationEnd animationend", function(e){
-                            $(this).removeClass(className + " in")
+                            $(this).addClass("active").removeClass(className + " dragging in")
                                 .css("-webkit-transform", "")
                                 .trigger(new $.Event("page:shown", { "target": $toElement[0], "relatedTarget": $fromElement[0] }));
+                            that.isMoving = false;
                         })
                         .trigger(new $.Event("page:show", { "target": $toElement[0], "relatedTarget": $fromElement[0] }));
                 }, 100);
             } else {
                 $toElement.addClass("active");
             }
+
+            this.$active = $toElement;
         },
         "dragHandler": function(e){
             var $active = $(e.currentTarget),
@@ -83,13 +89,17 @@ require(["hammer", "bootstrap"], function(Hammer) {
             var $active = $(e.currentTarget),
                 $next = $active[directionMap[e.gesture.direction]]();
 
+            if(this.isMoving) return;
+
             switch(e.gesture.direction){
                 case "left":
                 case "right":
-                    $next.addClass("active");
+                    $active.addClass("dragging");
+                    $next.addClass("dragging");
                     $active.on("drag", this.dragHandler);
                     break;
             }
+            this.isMoving = true;
         },
         "dragEndHandler": function(e){
             var $active = $(e.currentTarget),
@@ -104,6 +114,8 @@ require(["hammer", "bootstrap"], function(Hammer) {
                     if($next.length === 0){
                         translateX($active, "");
                         translateX($next, "");
+                        $next.removeClass("dragging");
+                        this.isMoving = false;
                     }
                     // swipe일 때 
                     else if(e.gesture.velocityX >= this.hammer.options.swipe_velocity){
@@ -114,7 +126,8 @@ require(["hammer", "bootstrap"], function(Hammer) {
                         // 원래 자리로 보낸다.
                         translateX($active, "");
                         translateX($next, "");
-                        $next.removeClass("active");
+                        $next.removeClass("dragging");
+                        this.isMoving = false;
                     } 
                     // 드래그가 반을 넘었을 때
                     else {

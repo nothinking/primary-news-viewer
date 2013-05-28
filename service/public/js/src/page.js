@@ -26,6 +26,8 @@ define(["backbone", "hammer", "text!/public/template/page.html"], function(Backb
 			this.$title = this.$(".toolbar h1");
 			this.$content = this.$(".content");
 
+			this.$el.data("view", this);
+
 			//console.log(this);
 		},
 		"backClickHandler": function(e){

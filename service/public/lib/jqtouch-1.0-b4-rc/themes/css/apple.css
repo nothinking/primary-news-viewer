@@ -660,6 +660,9 @@ body {
 #jqt > :not(.active) {
   display: none;
 }
+#jqt > .in, #jqt > .out, #jqt > .dragging {
+   display: block;
+}
 
 /* line 57, ../scss/include/_base.scss */
 #jqt.touchscroll:not(.animating3d) {
