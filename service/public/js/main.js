@@ -8,7 +8,8 @@ require.config({
         "bootstrap" : "../lib/bootstrap",
         "moment": "../lib/moment",
         "text": "../lib/text",
-        "hammer": "../lib/jquery.hammer.min"
+        "hammer": "../lib/jquery.hammer.min",
+        "circlemenu": "../lib/jquery.circlemenu"
     },
 
     shim: {
@@ -23,6 +24,9 @@ require.config({
             deps: ["jquery"]
         },
         "hammer": {
+            deps: ["jquery"]
+        },
+        "circlemenu": {
             deps: ["jquery"]
         }
     }

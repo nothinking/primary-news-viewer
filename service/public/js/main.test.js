@@ -8,7 +8,8 @@ require.config({
         "bootstrap" : "../lib/bootstrap",
         "moment": "../lib/moment",
         "text": "../lib/text",
-        "hammer": "../lib/jquery.hammer.min"
+        "hammer": "../lib/jquery.hammer.min",
+        "circlemenu": "../lib/jquery.circlemenu"
     },
 
     shim: {
@@ -24,7 +25,16 @@ require.config({
         },
         "hammer": {
             deps: ["jquery"]
+        },
+        "circlemenu": {
+            deps: ["jquery"]
         }
     }
+
+});
+
+require(["flicker"], function() {
+
+    $(".flicker").flicker();
 
 });

@@ -1,4 +1,4 @@
-define(["backbone", "page", "text!/public/template/pagelist.html", "text!/public/template/articleItem.html"], function(Backbone, Page, listHTML, itemHTML){
+define(["backbone", "page", "text!/public/template/pagelist.html", "text!/public/template/articleItem.html", "flicker"], function(Backbone, Page, listHTML, itemHTML){
 	var Model = Backbone.Model.extend({
 		"idAttribute": "_id",
 		"defaults": {
@@ -10,6 +10,7 @@ define(["backbone", "page", "text!/public/template/pagelist.html", "text!/public
 		"parse": function(response, jqXHR, options){
 			if(response.content === undefined && response.newsId !== undefined){
 				this.load(response.newsId);
+				return response;
 			};
 			response.content = response.content.replace(/<object.*<\/object>/ig, "");
 			return response;
@@ -34,13 +35,13 @@ define(["backbone", "page", "text!/public/template/pagelist.html", "text!/public
 			return "/api/" + this.attributes.categoryKey + "/" + this.id;
 		},
 		"prev": function(){
-			var i = this.collection.indexOf(this),
+			var i = this.index(),
 				prevIndex = i - 1;
 
 			return prevIndex >= 0 && this.collection.at(prevIndex);
 		},
 		"next": function(){
-			var i = this.collection.indexOf(this),
+			var i = this.index(),
 				nextIndex = i + 1;
 
 			return nextIndex < this.collection.length && this.collection.at(nextIndex);
@@ -59,27 +60,12 @@ define(["backbone", "page", "text!/public/template/pagelist.html", "text!/public
 			return model.get("newsId");
 		},
 		"initialize": function(models, options){
-
 			_.extend(this, {
 				"categoryKey": "top"
 			}, options);
 
 			this.params = {
 			};
-		},
-		"getOrAdd": function(id){
-			console.log(id)
-			var model = this.get(id);
-			if(!model){
-				model = new this.model({
-					"_id": id,
-					"categoryKey": this.categoryKey
-				});
-				this.add(model);
-				model.fetch();
-			}
-
-			return model;
 		}
 	});
 
@@ -100,114 +86,128 @@ define(["backbone", "page", "text!/public/template/pagelist.html", "text!/public
 	});
 
 	var List = Page.View.extend({
+		"el": "#list",
 		"view": Item,
 		"template": _.template(listHTML),
 		"initialize": function(options){
-			options = _.extend({
-				"parent": "category",
-				"child": "list"
-			}, options);
+			_.defaults(options, {
+				"collection": Factory.getCollection(options.categoryKey),
+			});
 			Page.View.prototype.initialize.apply(this, arguments);
-			this.listenTo(this.model.get("article"), "sync", this.render);
+			this.listenTo(this.collection, "sync", this.render);
 		},
 		"render": function(){
-			this.$title.html( this.model.get("title") );
+			Page.View.prototype.render.apply(this, arguments);
 			this.$content.empty();
-			this.model.get("article").each(this.append, this);
+			this.collection.each(this.append, this);
 		},
 		"append": function(model){
 			var view = new this.view({"model": model});
 			this.$content.append(view.render().$el);
+		}
+	});
+
+	var ContentItem = Backbone.View.extend({
+		"tagName": "div",
+		"className": "item",
+		"initialize": function(options){
+			_.extend(this, {}, options);
 		},
-		"showHandler": function(e){
-			Backbone.history.navigate("/" + this.model.get("article").categoryKey);
-		},
-		"index": function(){
-			return -1;
+		"render": function(){
+			this.$el.attr("id", this.model.cid);
+			this.$el.html(this.model.get("content"));
+			return this;
 		}
 	});
 
 	var View = Page.View.extend({
+		"el": "#view",
 		"events": _.extend(Page.View.prototype.events, {
-			"page:shown": "shownHandler"
+			"dragstart:before .flicker": "dragStartHandler"
 		}),
 		"initialize": function(options){
-			options = _.extend({
-				"parent": "list",
-				"child": "null"
-			}, options);
-
+			_.defaults(options, {
+				"collection": Factory.getCollection(options.categoryKey)
+			});
 			Page.View.prototype.initialize.apply(this, arguments);
-			this.listenTo(this.model.get("article"), "change", this.render);
-			this.listenTo(this.model.get("article"), "sync", this.render);
-			// this.model && this.listenTo(this.model, "change", this.render);
+
+			this.flicker = this.$content.flicker().data("flicker");
+			this.cids = [];
+			this.items = [];
 		},
-		"render": function(){
-			this.$title.html( this.model.get("article").get("title") );
-			this.$content.html( this.model.get("article").get("content") );
-			return this;
+		"select": function(id){
+			var that = this;
+
+			$.when(this.collection.deferred).done(function(){
+				var model = that.collection.get(id),
+					item = that.insert(model),
+					selectedItem = that.selectedItem || item;
+				that.flicker.activate(item.$el, selectedItem.$el);
+				that.selectedItem = item;
+			});
+
 		},
-		"showHandler": function(e){
-			// Backbone.history.navigate("/" + this.model.get("article").get("categoryKey") + "/" + this.model.get("article").get("_id"));
-		},
-		"shownHandler": function(e){
-			Backbone.history.navigate("/" + this.model.get("article").get("categoryKey") + "/" + this.model.get("article").get("_id"), { "trigger": true });
+		"insert": function(model){
+			var i = model.index(),
+				item = this.items[i],
+				found = false;
+
+			if(item){
+				console.log("이미 추가된 아이템");
+			} 
+			else {
+				item = this.items[i] = new ContentItem({ "model": model });
+				
+				if(!this.selectedItem){
+					console.log("최초의 아이템");
+					this.$content.append(item.render().$el);
+				}
+				else {
+					console.log("최초는 아니지만 처음 들어가는 아이템");
+					for(var j = i; j < this.cids.length; j++){
+						if(this.cids[j]){
+							this.items[j].$el.before(item.render().$el);
+							found = true;
+							break;
+						}
+					}
+					if(!found){
+						this.$content.append(item.render().$el);
+					}
+				}
+			}
+			this.cids[i] = model.cid;
+			
+			return item;
 		},
 		"backClickHandler": function(e){
 			e.preventDefault();
-			Backbone.history.navigate("/" + this.model.get("article").get("categoryKey"), { "trigger": true });
+			Backbone.history.navigate("/" + this.collection.categoryKey, { "trigger": true });
 		},
-		"index": function(){
-			return this.model.get("article").index();
+		"dragStartHandler": function(e){
+			var model, item;
+			switch(e.gesture.direction){
+				case "left":
+					model = this.selectedItem.model.next();
+					break;
+				case "right":
+					model = this.selectedItem.model.prev();
+					break;
+			}
+			if(model){
+				this.insert(model);
+			}
 		}
 	});
 
 	var Factory = {
 		// NOT IMPLEMENTED
 		"collections": {},
-		"lists": {},
-		"views": {},
-		"getList": function(key){
-			var list = this.lists[key];
-
-			// 리스트 페이지가 없으면 
-			if(list === undefined){
-				list = new List({
-					"model": new Page.Model({
-						"title": key,
-						"article": this.getCollection(key)
-					})
-				});
-				this.lists[key] = list;
-			}
-
-			list.model.categoryKey = key;
-
-			return list;
-		},
-		"getView": function(key, id){
-			var view;
-
-			if(id === undefined){
-				view = this.getList(key);
-			} else {
-				view = this.views[id];
-				if(view === undefined){
-					view = new View({
-						"model": new Page.Model({
-							"article": this.getModel(key, id)
-						})
-					});
-					this.views[id] = view;
-				}
-			}
-
-			return view;
-		},
 		"getCollection": function(key){
-			var collection = this.collections[key] || (this.collections[key] = new Collection(null, {"categoryKey": key}));
-			if(collection.length === 0){
-				collection.fetch();
+			var isNew = this.collections[key] === undefined,
+				collection = this.collections[key] || (this.collections[key] = new Collection(null, {"categoryKey": key}));
+			if(isNew){
+				collection.deferred = collection.fetch();
 			}
 			return collection;
 		},

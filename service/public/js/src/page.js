@@ -3,7 +3,7 @@ define(["backbone", "hammer", "text!/public/template/page.html"], function(Backb
 	var Model = Backbone.Model.extend({
 		"defaults": {
 			"title": "",
-			"article": null
+			"collection": null
 		},
 		"initialize": function(model, options){
 		}
@@ -17,7 +17,11 @@ define(["backbone", "hammer", "text!/public/template/page.html"], function(Backb
 			"page:show": "showHandler"
 		},
 		"initialize": function(options){
-			_.extend(this, {}, options);
+			_.extend(this, {
+				"model": new Model({
+					"title": options.title
+				}),
+			}, options);
 
 			this.$el.html(this.template(this.model.toJSON()));
 
@@ -29,6 +33,10 @@ define(["backbone", "hammer", "text!/public/template/page.html"], function(Backb
 			this.$el.data("view", this);
 
 			//console.log(this);
+		},
+		"render": function(){
+			this.$title.html( this.model.get("title") );
+			return this;
 		},
 		"backClickHandler": function(e){
 			e.preventDefault();
