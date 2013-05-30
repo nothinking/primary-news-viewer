@@ -9,7 +9,7 @@ define(["jquery", "hammer"], function($) {
 	Flicker.prototype = {
 		"initialize": function() {
 			this.hammer = this.$element.hammer().data("hammer");
-			this.$element.addClass("flicker")
+			this.$element
 				.on("dragstart.data-api", ".item", $.proxy(this.dragStartHandler, this))
 				.on("dragend.data-api", ".item", $.proxy(this.dragEndHandler, this));
 		},
@@ -27,27 +27,29 @@ define(["jquery", "hammer"], function($) {
 		},
 		"drag": function($target, $related, gesture){
 			var targetLeft = gesture.deltaX,
-				relatedLeft = $target.width() * ( gesture.direction === "left" ? 1 : -1 ) + gesture.deltaX
+				relatedLeft = this.$element.width() * ( gesture.direction === "left" ? 1 : -1 ) + gesture.deltaX
 			$target.css("left", targetLeft);
 			$related.addClass("dragging").css("left", relatedLeft);
 		},
 		"activate": function($target, $related, direction){
 			var targetLeft = "0",
-				direction = direction || $target.index() > $related.index() ? "left" : "right",
-				relatedLeft = direction === "left" ? "-100%" : "100%";
+				direction = direction || ($target.index() > $related.index() ? "left" : "right"),
+				relatedLeft = ((direction === "left") !== $target.is(".active")) ? "-100%" : "100%";
 
 			if($target.is($related)){
 				$target.removeClass("related").addClass("active");
 			} else {
 				$target.addClass("transition");
-				$target[0].offsetWidth;
-				$target.css("left", targetLeft).one("transitionEnd, webkitTransitionEnd", function(e){
-					$target.addClass("active").removeClass("related transition").css("left", "");
-					$related.removeClass("active transition related").css("left", "");
-				});
-
-				$related.addClass("transition").css("left", relatedLeft);
+				$related.addClass("transition");
+				setTimeout(function(){
+					$target.css("left", targetLeft).one("transitionEnd, webkitTransitionEnd", function(e){
+						$target.addClass("active").removeClass("related transition dragging").css("left", "");
+						$related.removeClass("active transition related dragging").css("left", "");
+					});
+					$related.css("left", relatedLeft);
+				}, 0);
 			}
+			$target.trigger("active");
 		},
 		"dragStartHandler": function(e) {
 			var $target = $(e.currentTarget),
@@ -58,13 +60,11 @@ define(["jquery", "hammer"], function($) {
 			switch (direction) {
 				case "left":
 				case "right":
-					
 					this.$element.trigger(new $.Event("dragstart:before", {
 						"gesture": e.gesture
 					}));
 
 					$related = this.getRelatedItem($target, direction);
-					$related.addClass("dragging related");
 
 					this.$element.on("drag.data-api", ".item", $.proxy(this.dragHandler, this));
 					
@@ -73,6 +73,7 @@ define(["jquery", "hammer"], function($) {
 					break;
 				default:
 					this.$element.off("drag.data-api");
+					console.log("cancel");
 					break;
 			}
 		},
@@ -82,8 +83,6 @@ define(["jquery", "hammer"], function($) {
 				direction = e.gesture.direction,
 				canActivate;
 
-			this.$element.find(".dragging").removeClass("dragging");
-
 			switch (direction) {
 				case "left":
 				case "right":
@@ -91,14 +90,19 @@ define(["jquery", "hammer"], function($) {
 					canActivate = $related.length !== 0 && (e.gesture.distance * 3 >= $target.width() || e.gesture.velocityX >= this.hammer.options.swipe_velocity);
 
 					if(canActivate){
-						this.activate($related, $target, e.gesture);
+						this.activate($related, $target, e.gesture.direction);
 					} else {
-						this.activate($target, $related, e.gesture);
+						this.activate($target, $related, e.gesture.direction);
 					}
 					e.gesture.preventDefault();
 					e.preventDefault();
 					break;
+				default:
+					this.$element.find(".item").removeClass("dragging");
+					break;
 			}
+
+
 			this.$element.off("drag.data-api");
 		},
 		"dragHandler": function(e){
@@ -111,8 +115,6 @@ define(["jquery", "hammer"], function($) {
 				case "right":
 					$related = this.getRelatedItem($target, direction);
 					this.drag($target, $related, e.gesture);
-					e.gesture.preventDefault();
-					e.preventDefault();
 					break;
 			}
 		}

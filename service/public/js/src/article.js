@@ -110,6 +110,9 @@ define(["backbone", "page", "text!/public/template/pagelist.html", "text!/public
 	var ContentItem = Backbone.View.extend({
 		"tagName": "div",
 		"className": "item",
+		"events": {
+			"active": "activeHandler"
+		},
 		"initialize": function(options){
 			_.extend(this, {}, options);
 		},
@@ -117,13 +120,17 @@ define(["backbone", "page", "text!/public/template/pagelist.html", "text!/public
 			this.$el.attr("id", this.model.cid);
 			this.$el.html(this.model.get("content"));
 			return this;
+		},
+		"activeHandler": function(e){
+			this.list.selectedItem = this;
 		}
 	});
 
 	var View = Page.View.extend({
 		"el": "#view",
 		"events": _.extend(Page.View.prototype.events, {
-			"dragstart:before .flicker": "dragStartHandler"
+			"dragstart:before .flicker": "dragStartHandler",
+			"active .item": "itemActiveHandler"
 		}),
 		"initialize": function(options){
 			_.defaults(options, {
@@ -131,8 +138,7 @@ define(["backbone", "page", "text!/public/template/pagelist.html", "text!/public
 			});
 			Page.View.prototype.initialize.apply(this, arguments);
 
-			this.flicker = this.$content.flicker().data("flicker");
-			this.cids = [];
+			this.flicker = this.$(".flicker").flicker().data("flicker");
 			this.items = [];
 		},
 		"select": function(id){
@@ -142,8 +148,11 @@ define(["backbone", "page", "text!/public/template/pagelist.html", "text!/public
 				var model = that.collection.get(id),
 					item = that.insert(model),
 					selectedItem = that.selectedItem || item;
+				
 				that.flicker.activate(item.$el, selectedItem.$el);
+				
 				that.selectedItem = item;
+
 			});
 
 		},
@@ -152,31 +161,19 @@ define(["backbone", "page", "text!/public/template/pagelist.html", "text!/public
 				item = this.items[i],
 				found = false;
 
-			if(item){
-				console.log("이미 추가된 아이템");
-			} 
-			else {
-				item = this.items[i] = new ContentItem({ "model": model });
-				
-				if(!this.selectedItem){
-					console.log("최초의 아이템");
+			if(!item){
+				item = this.items[i] = new ContentItem({ "model": model, "list": this });
+				for(var j = i + 1; j < this.collection.length; j++){
+					if(this.items[j]){
+						this.items[j].$el.before(item.render().$el);
+						found = true;
+						break;
+					}
+				}
+				if(!found){
 					this.$content.append(item.render().$el);
 				}
-				else {
-					console.log("최초는 아니지만 처음 들어가는 아이템");
-					for(var j = i; j < this.cids.length; j++){
-						if(this.cids[j]){
-							this.items[j].$el.before(item.render().$el);
-							found = true;
-							break;
-						}
-					}
-					if(!found){
-						this.$content.append(item.render().$el);
-					}
-				}
 			}
-			this.cids[i] = model.cid;
 			
 			return item;
 		},
@@ -197,6 +194,9 @@ define(["backbone", "page", "text!/public/template/pagelist.html", "text!/public
 			if(model){
 				this.insert(model);
 			}
+		},
+		"itemActiveHandler": function(e){
+			this.$title.html(this.selectedItem.model.get("title"));
 		}
 	});
 

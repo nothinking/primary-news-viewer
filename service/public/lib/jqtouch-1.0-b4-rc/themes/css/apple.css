@@ -1458,8 +1458,12 @@ body {
 
 .flicker {}
 .flicker .inner {position:relative;overflow:hidden;width:100%;}
-.flicker .inner > .item {display:none;position:relative;width:100%;top:0;}
+.flicker .inner > .item {display:none;position:relative;overflow:hidden;width:100%;top:0;}
 .flicker .inner > .active {display:block;}
 .flicker .inner > .dragging {display:block;position:absolute;}
 .flicker .inner > .related {display:block;position:absolute;top:0;}
 .flicker .inner > .transition {display:block;top:0;-webkit-transition:left 125ms;transition:125ms ease-in-out left;}
+
+
+.flicker {background-color:white;}
+.flicker .inner > .item {box-sizing:border-box;padding:12px;}
