@@ -1,4 +1,4 @@
-define(["backbone", "hammer", "text!/public/template/page.html"], function(Backbone, hammer, html){
+define(["backbone", "text!/public/template/page.html"], function(Backbone, html){
 
 	var Model = Backbone.Model.extend({
 		"defaults": {

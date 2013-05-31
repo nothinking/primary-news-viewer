@@ -33,20 +33,24 @@ define(["backbone", "page", "article", "circlemenu"], function(Backbone, Page, A
 					"title": categoryKey,
 					"categoryKey": categoryKey
 				});
-				this.list.collection.fetch();
 			}
 
+			
 			if(!this.view){
 				this.view = new Article.View({
 					"title": "",
 					"categoryKey": categoryKey
 				});
 			}
+
 		},
 		"routeListHandler": function(categoryKey){
 			this.prepare(categoryKey);
 			this.$el.children().hide();
 			this.list.$el.show();
+
+			$(".fixed-bottom").hide();
+
 			window.scrollTo(0, 1);
 		},
 		"routeViewHandler": function(categoryKey, id){

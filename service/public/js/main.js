@@ -9,7 +9,9 @@ require.config({
         "moment": "../lib/moment",
         "text": "../lib/text",
         "hammer": "../lib/jquery.hammer.min",
-        "circlemenu": "../lib/jquery.circlemenu"
+        "circlemenu": "../lib/jquery.circlemenu",
+        "kontext": "../../lib/kontext/js/kontext",
+        "stroll": "../../lib/stroll.js/js/stroll"
     },
 
     shim: {
@@ -27,6 +29,9 @@ require.config({
             deps: ["jquery"]
         },
         "circlemenu": {
+            deps: ["jquery"]
+        },
+        "stroll": {
             deps: ["jquery"]
         }
     }

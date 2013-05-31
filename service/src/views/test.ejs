@@ -9,7 +9,9 @@
 <link href="http://twitter.github.io/bootstrap/assets/js/google-code-prettify/prettify.css" rel="stylesheet">
  -->
 <meta name = "viewport" content = "initial-scale = 1.0">
-<!-- <link href="/public/lib/jqtouch-1.0-b4-rc/themes/css/apple.css" rel="stylesheet"> -->
+<link href="/public/lib/jqtouch-1.0-b4-rc/themes/css/apple.css" rel="stylesheet">
+<link href="/public/lib/kontext/css/kontext.css" rel="stylesheet">
+<link href="/public/lib/stroll.js/css/stroll.css" rel="stylesheet">
 
 <script src="/public/js/lib/require.js" data-main="/public/js/main.test.js"></script>
 <style>
@@ -24,9 +26,55 @@
 
     .flicker {font-size:32px;border-bottom:1px solid red;}
     .flicker .item {box-sizing: border-box;border:1px solid blue;}
+
+/**
+ * Demo page styles, all list scroll effects styles are in sctroll.css
+ */
+
+
+/**
+ * List used for the demo page
+ */
+ul {
+    position: relative;
+    width: 230px;
+    height: 480px;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    list-style: none;
+
+    -webkit-perspective: 400px;
+       -moz-perspective: 400px;
+        -ms-perspective: 400px;
+         -o-perspective: 400px;
+            perspective: 400px;
+}
+    ul li {
+        position: relative;
+        padding: 16px;
+        background: #eee;
+        color: #252525;
+        font-size: 18px;
+        z-index: 2;
+
+        -webkit-transform: translateZ(0px);
+           -moz-transform: translateZ(0px);
+            -ms-transform: translateZ(0px);
+             -o-transform: translateZ(0px);
+                transform: translateZ(0px);
+    }
+    ul li:nth-child(odd) {
+        background: #fff;
+    }
+
 </style>
 </head>
 <body>
+<ul class="content edgetoedge cards"><li data-cid="c67"><a href="/top/519c9e7f9e57ccf42500003a" data-navigate="true">        이색 열차도 타고 동강 위도 날아보고, 정선 테마 여행</a></li><li data-cid="c39"><a href="/top/519c9e7f9e57ccf425000028" data-navigate="true">        [송재우-대니얼김 더블플레이] FA 추신수, 천 억원 이상 받고 뉴욕으로 입성할까?</a></li><li data-cid="c55"><a href="/top/519c9e7f9e57ccf425000033" data-navigate="true">        최경주, "내 기록을 깰 선수는 배상문 밖에 없다"</a></li><li data-cid="c22"><a href="/top/519c9e7f9e57ccf42500000f" data-navigate="true">        낭만이 살아 있네! 옥상 캠핑 체험기</a></li><li data-cid="c17"><a href="/top/519c9e7f9e57ccf42500000b" data-navigate="true">        [장윤형 기자의 화장품 이야기] 피부에 ‘순한 화장품’ 기준이 뭘까?</a></li><li data-cid="c35"><a href="/top/519c9e7f9e57ccf425000021" data-navigate="true">            <img src="http://icon.daumcdn.net/w/c/13/05/27056357754915703.jpeg" alt="" align="absmiddle">        씨스타 수영장서 단체로 섹시몸매 과시 ‘후끈’</a></li><li data-cid="c29"><a href="/top/519c9e7f9e57ccf425000018" data-navigate="true">        ‘남사’ 연우진 이 남자가 다시보인다</a></li><li data-cid="c44"><a href="/top/519c9e7f9e57ccf425000029" data-navigate="true">            <img src="http://icon.daumcdn.net/w/c/13/05/27048042758384703.jpeg" alt="" align="absmiddle">        [mk포토] 맷 켐프-매팅리 감독, `외면하는 두 남자`</a></li><li data-cid="c23"><a href="/top/519c9e7f9e57ccf425000012" data-navigate="true">        한국형 기동헬기 수리온 2022년까지 200여대 전력화</a></li><li data-cid="c26"><a href="/top/519c9e7f9e57ccf425000013" data-navigate="true">        두배 비싼 수입기저귀 품질도 두배 좋을까</a></li><li data-cid="c13"><a href="/top/519c9e7f9e57ccf425000006" data-navigate="true">        ‘일베’ 중독 회원 만나보니 “‘김치X’라고 쓰면 기분이 풀린다”</a></li><li data-cid="c56"><a href="/top/519c9e7f9e57ccf425000036" data-navigate="true">        소녀시대 이동 중, 자거나 멍하거나 ‘영혼 없는 상태’ 폭소</a></li><li data-cid="c30"><a href="/top/519c9e7f9e57ccf425000019" data-navigate="true">        [단독]교수 ‘철밥통’…“승진·정년 95% 통과”</a></li><li data-cid="c43"><a href="/top/519c9e7f9e57ccf425000024" data-navigate="true">        [절도범 도주]사건의 핵심 열쇠는 'CCTV'…檢 '공개불가'</a></li><li data-cid="c69"><a href="/top/519c9e7f9e57ccf42500003d" data-navigate="true">        [단독 인터뷰]류현진 제친 ‘이달의 신인’ 개티스 “야구는 내 운명”</a></li><li data-cid="c27"><a href="/top/519c9e7f9e57ccf425000017" data-navigate="true">        주아민 웨딩촬영, "가수 팀 집에서 남편 처음 만나"</a></li><li data-cid="c53" class="future"><a href="/top/519c9e7f9e57ccf425000031" data-navigate="true">        "국민연금, 호주서 8억 달러 규모 부동산 매입"</a></li><li data-cid="c46" class="future"><a href="/top/519c9e7f9e57ccf42500002a" data-navigate="true">            <img src="http://icon.daumcdn.net/w/c/13/05/27046643065036703.jpeg" alt="" align="absmiddle">        로드FC, 매니지먼트 사업부 출범…서두원-로드걸 첫 계약</a></li><li data-cid="c32" class="future"><a href="/top/519c9e7f9e57ccf42500001c" data-navigate="true">        "경제상황, 외환위기 수준이거나 더 심각"</a></li><li data-cid="c45" class="future"><a href="/top/519c9e7f9e57ccf425000026" data-navigate="true">        &lt;`현대판 보물섬' 조세피난처란 무엇인가&gt;</a></li><li data-cid="c7" class="future"><a href="/top/519c9e7f9e57ccf425000003" data-navigate="true">        [단독]혜민스님 어록 '쉽게쉽게 살자' 표절인가? 스님 이름 도용인가?</a></li><li data-cid="c31" class="future"><a href="/top/519c9e7f9e57ccf42500001a" data-navigate="true">            <img src="http://icon.daumcdn.net/w/c/13/05/27049365835486703.jpeg" alt="" align="absmiddle">        '추태' 베이징, 홈페이지서도 '실례'</a></li><li data-cid="c47" class="future"><a href="/top/519c9e7f9e57ccf42500002b" data-navigate="true">        수영 "드라마 선택할 때마다 소녀시대는 전체 회의"</a></li><li data-cid="c62" class="future"><a href="/top/519c9e7f9e57ccf42500003b" data-navigate="true">        몇백만원 때문에 6년을 빚독촉에 시달린 사람들</a></li><li data-cid="c37" class="future"><a href="/top/519c9e7f9e57ccf42500001e" data-navigate="true">        삼성 채태인 타격 1위 초읽기, 그라운드 인생 역전</a></li><li data-cid="c11" class="future"><a href="/top/519c9e7f9e57ccf425000008" data-navigate="true">            <img src="http://icon.daumcdn.net/w/c/13/05/27053025480246703.jpeg" alt="" align="absmiddle">        목 조르는 강정호 '(양)의지, 네가 빈볼 던지라고 시켰지?'[포토]</a></li><li data-cid="c19" class="future"><a href="/top/519c9e7f9e57ccf42500000d" data-navigate="true">        '朴시장 제압 문건' 국정원 고발…檢, 수사엔 '난색'</a></li><li data-cid="c9" class="future"><a href="/top/519c9e7f9e57ccf425000002" data-navigate="true">        [단독]행복주택, 금융자산 많으면 입주 못한다</a></li><li data-cid="c68" class="future"><a href="/top/519c9e7f9e57ccf425000040" data-navigate="true">        [단독]경찰 "손호영 故여친 부검 결정..유족과 협의마쳐"</a></li><li data-cid="c38" class="future"><a href="/top/519c9e7f9e57ccf425000023" data-navigate="true">        '박근혜 비하 그림 논란' 평화박물관 압수수색(1보)</a></li><li data-cid="c33" class="future"><a href="/top/519c9e7f9e57ccf42500001b" data-navigate="true">        &lt;朴대통령, 취임 후 처음으로 군복차림 '안보행보'&gt;</a></li><li data-cid="c36" class="future"><a href="/top/519c9e7f9e57ccf42500001d" data-navigate="true">        '하우스푸어'가 사라졌다?…시장 '훈풍'에 이슈 실종</a></li><li data-cid="c57" class="future"><a href="/top/519c9e7f9e57ccf425000035" data-navigate="true">        [단독] 기성용♥한혜진, 8살 나이차 무색 '캐주얼룩' 데이트 패션</a></li><li data-cid="c58" class="future"><a href="/top/519c9e7f9e57ccf425000030" data-navigate="true">            <img src="http://icon.daumcdn.net/w/c/13/05/27049864085068703.jpeg" alt="" align="absmiddle">        [단독] '내조의 여왕' 한혜진, '예비신랑'기성용과 발마사지 데이트 현장 포착</a></li><li data-cid="c48" class="future"><a href="/top/519c9e7f9e57ccf42500002c" data-navigate="true">        엄정화 “올케는 또 하나의 가족, 뱃속 조카 기대돼”(인터뷰)</a></li><li data-cid="c18" class="future"><a href="/top/519c9e7f9e57ccf42500000e" data-navigate="true">        "임신부 요오드 결핍 경미해도 태아 IQ에 영향"</a></li><li data-cid="c6" class="future"><a href="/top/519c9e7f9e57ccf425000004" data-navigate="true">            <img src="http://icon.daumcdn.net/w/c/13/05/27051461476036703.jpeg" alt="" align="absmiddle">        [경향포토]최장집 교수와 인사하는 안철수 의원</a></li><li data-cid="c65" class="future"><a href="/top/519c9e7f9e57ccf42500003f" data-navigate="true">        ‘구가의서’ 정혜영, 그가 사군자였다...진짜 활약은 이제부터</a></li><li data-cid="c16" class="future"><a href="/top/519c9e7f9e57ccf425000009" data-navigate="true">        &lt;삼성, 팬택에 투자…스마트폰 시장 '윈윈' 노리나&gt;</a></li><li data-cid="c12" class="future"><a href="/top/519c9e7f9e57ccf425000005" data-navigate="true">        安 '정책네트워크 내일' 창립…사실상 창당 수순(종합2보)</a></li><li data-cid="c25" class="future"><a href="/top/519c9e7f9e57ccf425000015" data-navigate="true">        ‘위기의 다저스’ 류현진 어깨에 매팅리 감독 운명 좌우?</a></li><li data-cid="c28" class="future"><a href="/top/519c9e7f9e57ccf425000014" data-navigate="true">        ‘버블세븐의 몰락’ 아파트값 순위 지각변동</a></li><li data-cid="c49" class="future"><a href="/top/519c9e7f9e57ccf425000027" data-navigate="true">            <img src="http://icon.daumcdn.net/w/c/13/05/27056028101238703.png" alt="" align="absmiddle">        '갑 횡포' 논란 '리쌍' 건물…"목 좋아 대박날 것"</a></li><li data-cid="c42" class="future"><a href="/top/519c9e7f9e57ccf425000020" data-navigate="true">        ‘직장의 신’을 이끈 진정성, 시청자는 행복했다</a></li><li data-cid="c66" class="future"><a href="/top/519c9e7f9e57ccf42500003e" data-navigate="true">        [SS인턴수첩] '희망' 본 한국농구, '진짜 중국'을 넘어야 산다!</a></li><li data-cid="c59" class="future"><a href="/top/519c9e7f9e57ccf425000034" data-navigate="true">        [세계탁구선수권]銀 콤비 이상수-박영숙 조 "다음에는 금메달"</a></li><li data-cid="c64" class="future"><a href="/top/519c9e7f9e57ccf42500003c" data-navigate="true">        시작부터 만만찮은 행복주택</a></li><li data-cid="c40" class="future"><a href="/top/519c9e7f9e57ccf425000022" data-navigate="true">            <img src="http://icon.daumcdn.net/w/c/13/05/27053562313557703.jpeg" alt="" align="absmiddle">        기네스팰트로 과감 옆트임 드레스, 파파라치에 ‘발끈’</a></li><li data-cid="c10" class="future"><a href="/top/519c9e7f9e57ccf42500000a" data-navigate="true">        &lt; OCI, 이수영회장 조세피난처 페이퍼컴퍼니에 '술렁'&gt;</a></li><li data-cid="c52" class="future"><a href="/top/519c9e7f9e57ccf42500002e" data-navigate="true">        靑, 이남기 수석 사표 12일만에 수리..왜 늦어졌나</a></li><li data-cid="c24" class="future"><a href="/top/519c9e7f9e57ccf425000016" data-navigate="true">        포항 박희철 울산전 사후 징계, 2G 출전정지</a></li><li data-cid="c54" class="future"><a href="/top/519c9e7f9e57ccf425000032" data-navigate="true">        `150만원대 벽`에 갇힌 삼성전자 왜?</a></li><li data-cid="c34" class="future"><a href="/top/519c9e7f9e57ccf42500001f" data-navigate="true">        일본 기자들 “이대호, 신뢰할 수 있는 4번 타자”</a></li><li data-cid="c51" class="future"><a href="/top/519c9e7f9e57ccf42500002f" data-navigate="true">        뿔난 시인들 "시집 '사람' 배포 중지, 전량회수하라"</a></li><li data-cid="c61" class="future"><a href="/top/519c9e7f9e57ccf425000039" data-navigate="true">        전두환 추징금 시효임박…전국서 환수 촉구 잇따라(종합)</a></li><li data-cid="c15" class="future"><a href="/top/519c9e7f9e57ccf42500000c" data-navigate="true">            <img src="http://icon.daumcdn.net/w/c/13/05/27055201166352703.jpeg" alt="" align="absmiddle">        폭포 아래서 물싸움</a></li><li data-cid="c63" class="future"><a href="/top/519c9e7f9e57ccf425000038" data-navigate="true">            <img src="http://icon.daumcdn.net/w/c/13/05/27056008738133703.jpeg" alt="" align="absmiddle">        [취재파일] 뚱뚱하면 아베크롬비 입지도, 구경하지도 말아라?</a></li><li data-cid="c8" class="future"><a href="/top/519c9e7f9e57ccf425000001" data-navigate="true">        &lt;'숨죽인' 재계…"어디로 불똥 튈지 몰라" 초긴장&gt;</a></li><li data-cid="c50" class="future"><a href="/top/519c9e7f9e57ccf42500002d" data-navigate="true">        북한, 중국 '노크'...혈맹에는 진심 보일까</a></li><li data-cid="c41" class="future"><a href="/top/519c9e7f9e57ccf425000025" data-navigate="true">            <img src="http://icon.daumcdn.net/w/c/13/05/27056391561548703.jpeg" alt="" align="absmiddle">        관광객들과 악수하는 이명박 전 대통령</a></li><li data-cid="c14" class="future"><a href="/top/519c9e7f9e57ccf425000007" data-navigate="true">        페이퍼컴퍼니 명단 공개…탈세조사는 어떻게?</a></li><li data-cid="c20" class="future"><a href="/top/519c9e7f9e57ccf425000011" data-navigate="true">        [단독]檢, CJ 재무팀장 등 10여명 전격 소환</a></li><li data-cid="c60" class="future"><a href="/top/519c9e7f9e57ccf425000037" data-navigate="true">            <img src="http://icon.daumcdn.net/w/c/13/05/27058058367626703.jpeg" alt="" align="absmiddle">        '이효리 컴백쇼' 파격적인 수영복으로 '미스코리아' 무대</a></li><li data-cid="c21" class="future"><a href="/top/519c9e7f9e57ccf425000010" data-navigate="true">        ‘이효리쇼’ 여왕다운 귀환, 여전히 화려했다</a></li></ul>
+
+<!--
 <div class="flicker">
     <div class="inner">
         <div class="item">
@@ -49,5 +97,6 @@
         </div>
     </div>
 </div>
+-->
 </body>
 </html>

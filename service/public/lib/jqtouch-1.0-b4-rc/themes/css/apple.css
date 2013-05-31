@@ -35,12 +35,10 @@ body {
   left: 0;
   bottom: 0;
   */
-  -webkit-user-drag: none;
 }
 /* line 21, ../scss/include/_base.scss */
 #jqt a {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-  -webkit-user-drag: none;
 }
 /* line 26, ../scss/include/_base.scss */
 #jqt .selectable, #jqt input, #jqt textarea {
@@ -988,7 +986,7 @@ body {
   list-style-type: none;
   overflow: hidden;
   padding: 10px;
-  -webkit-transform: translate3d(0, 0, 0);
+  /* -webkit-transform: translate3d(0, 0, 0); */
   /* expensive way to avoid flickr */
 }
 /* line 253, ../scss/include/_skeleton.scss */
@@ -1420,6 +1418,7 @@ body {
 #jqt .content {
   background-color: white;
   font-size:16px;
+  max-height:100%;
 }
 #jqt .content h4 {
   font-size:1.2em;
@@ -1511,3 +1510,47 @@ body {
 .list.fixed-bottom .toolbar {
   display:none;
 }
+
+
+ul {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  overflow-y: scroll;
+
+  -webkit-perspective: 400px;
+     -moz-perspective: 400px;
+      -ms-perspective: 400px;
+       -o-perspective: 400px;
+          perspective: 400px;
+}
+  ul li {
+    position: relative;
+    background: #eee;
+    z-index: 2;
+
+    -webkit-transform: translateZ(0px);
+       -moz-transform: translateZ(0px);
+        -ms-transform: translateZ(0px);
+         -o-transform: translateZ(0px);
+            transform: translateZ(0px);
+  }
+  ul li:nth-child(odd) {
+    background: #fff;
+  }
+
+
+#jqt {
+  position:absolute;
+  top:0;
+  bottom:0;
+  left:0;
+  right:0;
+}
+
+#jqt > #list {
+  position:absolute;
+  height:100%;
+}
+

@@ -1,4 +1,7 @@
-define(["backbone", "page", "text!/public/template/pagelist.html", "text!/public/template/articleItem.html", "flicker"], function(Backbone, Page, listHTML, itemHTML){
+define(
+	["backbone", "page", 
+	 "text!/public/template/pagelist.html", "text!/public/template/articleItem.html", 
+	 "flicker", "stroll"], function(Backbone, Page, listHTML, itemHTML){
 	var Model = Backbone.Model.extend({
 		"idAttribute": "_id",
 		"defaults": {
@@ -95,10 +98,16 @@ define(["backbone", "page", "text!/public/template/pagelist.html", "text!/public
 				"collection": Factory.getCollection(options.categoryKey),
 			});
 			Page.View.prototype.initialize.apply(this, arguments);
-			console.log(this.$el, this.el)
 			this.listenTo(this.collection, "sync", this.render);
+			this.listenToOnce(this.collection, "sync", this.stroll);
+
+		},
+		"stroll": function(){
+			console.log("stroll");
+			stroll.bind(this.$content);
 		},
 		"render": function(){
+			console.log(arguments)
 			Page.View.prototype.render.apply(this, arguments);
 			this.$content.empty();
 			this.collection.each(this.append, this);
