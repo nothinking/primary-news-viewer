@@ -2,6 +2,10 @@ define(["backbone", "page", "article", "circlemenu"], function(Backbone, Page, A
 
 	var App = Backbone.View.extend({
 		"el": "#jqt",
+		"events": {
+			"drag #view": "dragHandler",
+			"dragend #view": "dragEndHandler"
+		},
 		"router": null,
 		"initialize": function(options){
 			_.extend(this, {
@@ -21,8 +25,9 @@ define(["backbone", "page", "article", "circlemenu"], function(Backbone, Page, A
 			$(".circlemenu").circleMenu({
 		        "direction": "top-right"
 		    }).show();
+
 		},
-		"routeListHandler": function(categoryKey){
+		"prepare": function(categoryKey){
 			if(!this.list){
 				this.list = new Article.List({
 					"title": categoryKey,
@@ -30,21 +35,45 @@ define(["backbone", "page", "article", "circlemenu"], function(Backbone, Page, A
 				});
 				this.list.collection.fetch();
 			}
-			this.$el.children().hide();
-			this.list.$el.show();
-		},
-		"routeViewHandler": function(categoryKey, id){
+
 			if(!this.view){
 				this.view = new Article.View({
 					"title": "",
 					"categoryKey": categoryKey
 				});
 			}
+		},
+		"routeListHandler": function(categoryKey){
+			this.prepare(categoryKey);
+			this.$el.children().hide();
+			this.list.$el.show();
+			window.scrollTo(0, 1);
+		},
+		"routeViewHandler": function(categoryKey, id){
+			this.prepare(categoryKey);
 			this.view.select(id);
 			this.$el.children().hide();
 			this.view.$el.show();
-
+			window.scrollTo(0, 1);
 			window.view = this.view;
+		},
+		"dragHandler": function(e){
+			switch(e.gesture.direction){
+				case "down":
+					if(window.scrollY <= 200){
+						$(".fixed-bottom").hide();
+					} else if(e.gesture.velocityY > 0.3){
+						$(".fixed-bottom").show();
+					} else {
+						$(".fixed-bottom").hide();
+					}
+				break;
+				default:
+					$(".fixed-bottom").hide();
+				break;
+			}
+		},
+		"dragEndHandler": function(e){
 		}
 	});
 

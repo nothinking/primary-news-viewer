@@ -80,13 +80,14 @@ define(["backbone", "page", "text!/public/template/pagelist.html", "text!/public
 
 		},
 		"render": function(){
+			this.$el.attr("data-cid", this.model.cid);
 			this.$el.html(this.template(this.model.toJSON()));
 			return this;
 		}	
 	});
 
 	var List = Page.View.extend({
-		"el": "#list",
+		"el": ".list",
 		"view": Item,
 		"template": _.template(listHTML),
 		"initialize": function(options){
@@ -94,6 +95,7 @@ define(["backbone", "page", "text!/public/template/pagelist.html", "text!/public
 				"collection": Factory.getCollection(options.categoryKey),
 			});
 			Page.View.prototype.initialize.apply(this, arguments);
+			console.log(this.$el, this.el)
 			this.listenTo(this.collection, "sync", this.render);
 		},
 		"render": function(){
@@ -118,7 +120,7 @@ define(["backbone", "page", "text!/public/template/pagelist.html", "text!/public
 		},
 		"render": function(){
 			this.$el.attr("id", this.model.cid);
-			this.$el.html(this.model.get("content"));
+			this.$el.html("<h4>" + this.model.get("title") + "</h4><br/>" + this.model.get("content"));
 			return this;
 		},
 		"activeHandler": function(e){
@@ -130,15 +132,18 @@ define(["backbone", "page", "text!/public/template/pagelist.html", "text!/public
 		"el": "#view",
 		"events": _.extend(Page.View.prototype.events, {
 			"dragstart:before .flicker": "dragStartHandler",
-			"active .item": "itemActiveHandler"
+			"active .item": "itemActiveHandler",
 		}),
 		"initialize": function(options){
 			_.defaults(options, {
 				"collection": Factory.getCollection(options.categoryKey)
 			});
 			Page.View.prototype.initialize.apply(this, arguments);
-
+			
+			this.$content = this.$(".flicker .content");
+			
 			this.flicker = this.$(".flicker").flicker().data("flicker");
+
 			this.items = [];
 		},
 		"select": function(id){
@@ -150,10 +155,8 @@ define(["backbone", "page", "text!/public/template/pagelist.html", "text!/public
 					selectedItem = that.selectedItem || item;
 				
 				that.flicker.activate(item.$el, selectedItem.$el);
-				
-				that.selectedItem = item;
-
 			});
+
 
 		},
 		"insert": function(model){
@@ -190,6 +193,10 @@ define(["backbone", "page", "text!/public/template/pagelist.html", "text!/public
 				case "right":
 					model = this.selectedItem.model.prev();
 					break;
+				case "down":
+					break;
+				case "up":
+					break;
 			}
 			if(model){
 				this.insert(model);
@@ -197,6 +204,8 @@ define(["backbone", "page", "text!/public/template/pagelist.html", "text!/public
 		},
 		"itemActiveHandler": function(e){
 			this.$title.html(this.selectedItem.model.get("title"));
+			Backbone.history.navigate("/" + this.selectedItem.model.get("categoryKey") + "/" + this.selectedItem.model.id, { "replace": true });
+			$(".fixed-bottom").find("li").eq(this.selectedItem.model.index()).addClass("read");
 		}
 	});
 

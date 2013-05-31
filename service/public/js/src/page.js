@@ -23,9 +23,9 @@ define(["backbone", "hammer", "text!/public/template/page.html"], function(Backb
 				}),
 			}, options);
 
-			this.$el.html(this.template(this.model.toJSON()));
+			// this.$el.html(this.template(this.model.toJSON()));
 
-			this.$el.attr("id", this.model.cid);
+			// this.$el.attr("id", this.model.cid);
 			
 			this.$title = this.$(".toolbar h1");
 			this.$content = this.$(".content");
