@@ -2278,16 +2278,13 @@
 
 /* BACKBONE NAVIGATE */
 !function($){
-  /*
   $(document.body).on("click.navigate.data-api", "[data-navigate]", function(e){
-    debugger;
     var $target = $(e.currentTarget),
       url = typeof $target.data("navigate") === "string" ? $target.data("navigate") : $target.attr("href");
 
     e.preventDefault();
     Backbone.History.started && Backbone.history.navigate(url, { "trigger": true });
   })
- */
 }(window.jQuery);
 
 

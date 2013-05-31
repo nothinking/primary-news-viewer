@@ -1,4 +1,4 @@
-define(["backbone", "page", "article", "circlemenu"], function(Backbone, Page, Article){
+define(["backbone", "page", "article", "circlemenu", "kontext"], function(Backbone, Page, Article){
 
 	var App = Backbone.View.extend({
 		"el": "#jqt",
@@ -20,11 +20,17 @@ define(["backbone", "page", "article", "circlemenu"], function(Backbone, Page, A
 			this.listenTo(this.router, "route:list", this.routeListHandler);
 			this.listenTo(this.router, "route:view", this.routeViewHandler);
 
-			!Backbone.History.started && Backbone.history.start({ "pushState": true });
 
 			$(".circlemenu").circleMenu({
 		        "direction": "top-right"
 		    }).show();
+
+		    this.k = kontext(this.el);
+
+		    console.log(this.k);
+
+		    
+			!Backbone.History.started && Backbone.history.start({ "pushState": true });
 
 		},
 		"prepare": function(categoryKey){
@@ -42,12 +48,16 @@ define(["backbone", "page", "article", "circlemenu"], function(Backbone, Page, A
 					"categoryKey": categoryKey
 				});
 			}
-
 		},
 		"routeListHandler": function(categoryKey){
 			this.prepare(categoryKey);
+
+			/*
 			this.$el.children().hide();
 			this.list.$el.show();
+			*/
+
+			this.k.show(0);
 
 			$(".fixed-bottom").hide();
 
@@ -56,8 +66,11 @@ define(["backbone", "page", "article", "circlemenu"], function(Backbone, Page, A
 		"routeViewHandler": function(categoryKey, id){
 			this.prepare(categoryKey);
 			this.view.select(id);
+			this.k.show(1);
+			/*
 			this.$el.children().hide();
 			this.view.$el.show();
+			*/
 			window.scrollTo(0, 1);
 			window.view = this.view;
 		},

@@ -86,7 +86,7 @@ define(
 			this.$el.attr("data-cid", this.model.cid);
 			this.$el.html(this.template(this.model.toJSON()));
 			return this;
-		}	
+		}
 	});
 
 	var List = Page.View.extend({
@@ -103,7 +103,6 @@ define(
 
 		},
 		"stroll": function(){
-			console.log("stroll");
 			stroll.bind(this.$content);
 		},
 		"render": function(){
@@ -128,8 +127,17 @@ define(
 			_.extend(this, {}, options);
 		},
 		"render": function(){
+			var that = this;
 			this.$el.attr("id", this.model.cid);
-			this.$el.html("<h4>" + this.model.get("title") + "</h4><br/>" + this.model.get("content"));
+			this.$el.html(this.model.get("content"));
+			this.$("img").each(function(){
+				var $this = $(this);
+				while(!$this.parent().is(that.$el)){
+					console.log($this.parent())
+					$this.unwrap();
+				}
+			})
+
 			return this;
 		},
 		"activeHandler": function(e){

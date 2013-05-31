@@ -3,34 +3,33 @@
 <head>
 <title>Primary news viewer</title>
 
-<!-- <link href="http://twitter.github.io/bootstrap/assets/css/bootstrap.css" rel="stylesheet">
-<link href="http://twitter.github.io/bootstrap/assets/css/bootstrap-responsive.css" rel="stylesheet">
-<link href="http://twitter.github.io/bootstrap/assets/css/docs.css" rel="stylesheet">
-<link href="http://twitter.github.io/bootstrap/assets/js/google-code-prettify/prettify.css" rel="stylesheet">
- -->
 <meta name = "viewport" content = "initial-scale = 1.0">
-<link href="/public/lib/jqtouch-1.0-b4-rc/themes/css/apple.css" rel="stylesheet">
-<link href="/public/lib/kontext/css/kontext.css" rel="stylesheet">
+<link href="/public/css/common.css" rel="stylesheet">
+<!-- <link href="/public/lib/jqtouch-1.0-b4-rc/themes/css/apple.css" rel="stylesheet">
+<style>
+  #jqt ul {margin:0;}
+</style>
+ --><link href="/public/lib/kontext/css/kontext.css" rel="stylesheet">
 <link href="/public/lib/stroll.js/css/stroll.css" rel="stylesheet">
-<!-- <link href="/public/lib/stroll.js/css/example.css" rel="stylesheet"> -->
-
-
+<link href="//netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome.css" rel="stylesheet">
 <script src="/public/js/lib/require.js" data-main="/public/js/main.js"></script>
 </head>
 <body>
-<div id="jqt" class="supports3d">
-	<div id="list" class="item list">
+<div id="jqt" class="kontext">
+	<div id="list" class="item list layer show">
     <div class="toolbar">
-      <a href="#" class="back">back</a>
+      <a href="#" class="o-btn back"><i class="icon-chevron-left"></i></a>
       <h1></h1>
     </div>
-    <ul class="content edgetoedge wave">
-    </ul>
+    <div class="crop">
+      <ul class="content stroll cards">
+      </ul>
+    </div>
 	</div>
 
-	<div id="view" class="item">
+	<div id="view" class="item layer">
     <div class="toolbar">
-      <a href="#" class="back">back</a>
+      <a href="#" class="o-btn back"><i class=" icon-chevron-left"></i></a>
       <h1></h1>
     </div>
     <div class="flicker">
@@ -39,10 +38,11 @@
     </div>
 	</div>
 </div>
-<div class="list item fixed-bottom">
+<div class="list item fixed-bottom" style="display:none">
   <ul class="content edgetoedge">
   </ul>
 </div>
+<!--
 <ul class="circlemenu" style="display:none">
   <li><a href="#">+</a></li>
   <li><a href="#">1</a></li>
@@ -51,6 +51,6 @@
   <li><a href="#">4</a></li>
   <li><a href="#">5</a></li>
 </ul>
-
+-->
 </body>
 </html>

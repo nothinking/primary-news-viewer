@@ -1,6 +1,7 @@
 <a href="/<%= categoryKey %>/<%= _id %>" data-navigate="true">
 	<% if (img) { %>
-		<img src="<%=img%>" alt="" align="absmiddle" />
+		<img src="<%= img %>" alt="<%= title %>" />
 	<% } %>
-	<%= title %>
+	<span class="title"><%= title %></span>
+	<span class="desc"><%= content.replace(/<\/?.*?\/?>/ig, "").substring(0, 100) %></span>
 </a>
