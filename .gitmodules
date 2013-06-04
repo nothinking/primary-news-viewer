@@ -1,0 +1,3 @@
+[submodule "service/public/lib/kontext"]
+	path = service/public/lib/kontext
+	url = git://github.com/hakimel/kontext.git
