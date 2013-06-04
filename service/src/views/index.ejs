@@ -11,12 +11,29 @@
 </style>
  --><link href="/public/lib/kontext/css/kontext.css" rel="stylesheet">
 <link href="/public/lib/stroll.js/css/stroll.css" rel="stylesheet">
+<link href="/public/lib/Avgrund/css/avgrund.css" rel="stylesheet">
+<link href="/public/lib/path-menu/stylesheets/app.css" rel="stylesheet">
 <link href="//netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome.css" rel="stylesheet">
 <script src="/public/js/lib/require.js" data-main="/public/js/main.js"></script>
 </head>
 <body>
-<div id="jqt" class="kontext">
-	<div id="list" class="item list layer show">
+<div id="jqt" class="kontext avgrund-contents">
+
+  <div id="category" class="item list layer">
+    <div class="toolbar">
+      <a href="#" class="o-btn back"><i class="icon-chevron-left"></i></a>
+      <h1>News</h1>
+    </div>
+    <div class="crop">
+      <ul class="content stroll cards">
+        <li>
+          <a href="/top" data-navigate="true">다음탑기사</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+	<div id="list" class="item list layer">
     <div class="toolbar">
       <a href="#" class="o-btn back"><i class="icon-chevron-left"></i></a>
       <h1></h1>
@@ -42,15 +59,33 @@
   <ul class="content edgetoedge">
   </ul>
 </div>
-<!--
-<ul class="circlemenu" style="display:none">
-  <li><a href="#">+</a></li>
-  <li><a href="#">1</a></li>
-  <li><a href="#">2</a></li>
-  <li><a href="#">3</a></li>
-  <li><a href="#">4</a></li>
-  <li><a href="#">5</a></li>
-</ul>
--->
+
+<div style="position:relative;z-index:100">
+  <input type="checkbox" id="menu" class="menuControl">  <!-- Hidden -->
+  <label for="menu">
+      <div class="circle-container">
+          <button class="circle">&#10006;</button>
+      </div>
+  </label>  
+  <ul id="menuList" class="items">
+    <li>&#9733;</li>
+    <li>&#9733;</li>
+    <li>&#9733;</li>
+    <li>&#9733;</li>
+    <li>&#9733;</li>
+    <li>&#9733;</li>         
+  </ul>   
+</div>
+<div class="avgrund-cover"></div>
+<div id="default-popup" class="avgrund-popup">
+  <h2>POP POP POP</h2>
+  <p>
+    Pop pop pop POP pp pooop poooop pp pooop pop pooop. Poop pp p pp pp pop the poooop pooooooop.
+  </p>
+  <p>
+    Pp pop poop poop pop pooop pooooop pooop <a href="http://lab.hakim.se/meny">Poop</a>, <a href="http://lab.hakim.se/reveal-js">poooop.pp</a> pop <a href="http://lab.hakim.se/scroll-effects">pooop.pp</a>.
+  </p>
+  <button class="btn"><i class="icon-remove-sign"></i></button>
+</div>
 </body>
 </html>

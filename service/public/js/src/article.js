@@ -90,7 +90,7 @@ define(
 	});
 
 	var List = Page.View.extend({
-		"el": ".list",
+		"el": "#list",
 		"view": Item,
 		"template": _.template(listHTML),
 		"initialize": function(options){
@@ -114,6 +114,10 @@ define(
 		"append": function(model){
 			var view = new this.view({"model": model});
 			this.$content.append(view.render().$el);
+		},
+		"backClickHandler": function(e){
+			e.preventDefault();
+			Backbone.history.navigate("/", { "trigger": true });
 		}
 	});
 
@@ -121,7 +125,9 @@ define(
 		"tagName": "div",
 		"className": "item",
 		"events": {
-			"active": "activeHandler"
+			"active": "activeHandler",
+			"transitionEnd": "transitionEndHandler",
+			"webkitTransitionEnd": "transitionEndHandler"
 		},
 		"initialize": function(options){
 			_.extend(this, {}, options);
@@ -142,6 +148,9 @@ define(
 		},
 		"activeHandler": function(e){
 			this.list.selectedItem = this;
+		},
+		"transitionEndHandler": function(e){
+			window.scrollTo(0, 1);
 		}
 	});
 
@@ -149,7 +158,7 @@ define(
 		"el": "#view",
 		"events": _.extend(Page.View.prototype.events, {
 			"dragstart:before .flicker": "dragStartHandler",
-			"active .item": "itemActiveHandler",
+			"active .item": "itemActiveHandler"
 		}),
 		"initialize": function(options){
 			_.defaults(options, {

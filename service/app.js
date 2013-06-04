@@ -21,6 +21,7 @@ app.all("/api/:collection/:id", routes.api);
 app.get("/test", routes.test);
 
 app.get("/:collection", routes.index);
+app.get("/", routes.index);
 app.get("/:collection/:id", routes.index);
 
 http.createServer(app).listen(app.get("port"), function(){

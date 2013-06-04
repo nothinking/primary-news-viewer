@@ -1,4 +1,4 @@
-define(["backbone", "page", "article", "circlemenu", "kontext"], function(Backbone, Page, Article){
+define(["backbone", "page", "article", "menu", "kontext"], function(Backbone, Page, Article, Menu){
 
 	var App = Backbone.View.extend({
 		"el": "#jqt",
@@ -11,27 +11,23 @@ define(["backbone", "page", "article", "circlemenu", "kontext"], function(Backbo
 			_.extend(this, {
 				"router": new Backbone.Router({
 					"routes": {
+						"": "category",
 						":category": "list",
 						":category/:id": "view"
 					}
 				})
 			}, options);
 
+			this.listenTo(this.router, "route:category", this.routeCategoryHandler);
 			this.listenTo(this.router, "route:list", this.routeListHandler);
 			this.listenTo(this.router, "route:view", this.routeViewHandler);
 
 
-			$(".circlemenu").circleMenu({
-		        "direction": "top-right"
-		    }).show();
-
 		    this.k = kontext(this.el);
 
-		    console.log(this.k);
+		    this.menu = new Menu();
 
-		    
 			!Backbone.History.started && Backbone.history.start({ "pushState": true });
-
 		},
 		"prepare": function(categoryKey){
 			if(!this.list){
@@ -40,7 +36,6 @@ define(["backbone", "page", "article", "circlemenu", "kontext"], function(Backbo
 					"categoryKey": categoryKey
 				});
 			}
-
 			
 			if(!this.view){
 				this.view = new Article.View({
@@ -49,32 +44,32 @@ define(["backbone", "page", "article", "circlemenu", "kontext"], function(Backbo
 				});
 			}
 		},
+		"routeCategoryHandler": function(){
+			if(this.$el.find("> .show").length){
+				this.k.show(0);
+			} else {
+				this.$("#category").addClass("show");
+			}
+		},
 		"routeListHandler": function(categoryKey){
 			this.prepare(categoryKey);
-
-			/*
-			this.$el.children().hide();
-			this.list.$el.show();
-			*/
-
-			this.k.show(0);
-
-			$(".fixed-bottom").hide();
-
-			window.scrollTo(0, 1);
+			if(this.$el.find("> .show").length){
+				this.k.show(1);
+			} else {
+				this.list.$el.addClass("show");
+			}
 		},
 		"routeViewHandler": function(categoryKey, id){
 			this.prepare(categoryKey);
 			this.view.select(id);
-			this.k.show(1);
-			/*
-			this.$el.children().hide();
-			this.view.$el.show();
-			*/
-			window.scrollTo(0, 1);
-			window.view = this.view;
+			if(this.$el.find("> .show").length){
+				this.k.show(2);
+			} else {
+				this.view.$el.addClass("show");
+			}
 		},
 		"dragHandler": function(e){
+			/*
 			switch(e.gesture.direction){
 				case "down":
 					if(window.scrollY <= 200){
@@ -89,8 +84,12 @@ define(["backbone", "page", "article", "circlemenu", "kontext"], function(Backbo
 					$(".fixed-bottom").hide();
 				break;
 			}
+			*/
 		},
 		"dragEndHandler": function(e){
+		},
+		"show": function(e){
+
 		}
 	});
 

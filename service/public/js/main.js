@@ -11,7 +11,8 @@ require.config({
         "hammer": "../lib/jquery.hammer.min",
         "circlemenu": "../lib/jquery.circlemenu",
         "kontext": "../../lib/kontext/js/kontext",
-        "stroll": "../../lib/stroll.js/js/stroll"
+        "stroll": "../../lib/stroll.js/js/stroll",
+        "avgrund": "../../lib/Avgrund/js/avgrund"
     },
 
     shim: {
@@ -33,6 +34,9 @@ require.config({
         },
         "stroll": {
             deps: ["jquery"]
+        },
+        "avgrund": {
+            deps: ["jquery"]
         }
     }
 
@@ -41,5 +45,6 @@ require.config({
 require(["bootstrap", "app"], function(bootstrap, App) {
 
     new App();
+
 
 });

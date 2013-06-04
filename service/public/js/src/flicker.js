@@ -67,13 +67,14 @@ define(["jquery", "hammer"], function($) {
 					$related = this.getRelatedItem($target, direction);
 
 					this.$element.on("drag.data-api", ".item", $.proxy(this.dragHandler, this));
+					this.isHorozontal = true;
 					
 					e.gesture.preventDefault();
 					e.preventDefault();
 					break;
 				default:
 					this.$element.off("drag.data-api");
-					console.log("cancel");
+					this.isHorozontal = false;
 					break;
 			}
 		},
@@ -110,12 +111,14 @@ define(["jquery", "hammer"], function($) {
 				$related,
 				direction = e.gesture.direction;
 
-			switch (direction) {
-				case "left":
-				case "right":
-					$related = this.getRelatedItem($target, direction);
-					this.drag($target, $related, e.gesture);
-					break;
+			if(this.isHorozontal){
+				switch (direction) {
+					case "left":
+					case "right":
+						$related = this.getRelatedItem($target, direction);
+						this.drag($target, $related, e.gesture);
+						break;
+				}
 			}
 		}
 	};
